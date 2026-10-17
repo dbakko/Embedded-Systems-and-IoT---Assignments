@@ -1,0 +1,17 @@
+# Arduino and PlatformIO build outputs
+build/
+.pio/
+*.elf
+*.hex
+*.eep
+*.map
+
+# VS Code settings and cache
+.vscode/
+
+# Editor and OS files
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
