@@ -9,6 +9,9 @@ build/
 # VS Code settings and cache
 .vscode/
 
+# Local clangd configuration
+/src/.clangd
+
 # Editor and OS files
 *~
 *.swp

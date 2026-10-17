@@ -1,4 +1,3 @@
-#include "Game.h"
 #include "Config.h"
 #include "Display.h"
 #include <Arduino.h>

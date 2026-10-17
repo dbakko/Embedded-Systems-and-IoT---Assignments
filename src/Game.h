@@ -1,4 +1,7 @@
 #include <Arduino.h>
 
-void Begin();
-void Update();
+namespace Game{
+  void Begin();
+  void Update();
+}
+
