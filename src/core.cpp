@@ -1,6 +1,6 @@
 #include "core.h"
 #include "kernel.h"
-#include "Display.h"
+#include "display.h"
 #include <Arduino.h>
 
 size_t index = 0;

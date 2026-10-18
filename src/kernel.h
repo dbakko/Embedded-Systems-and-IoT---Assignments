@@ -3,8 +3,6 @@
 
 #include <Arduino.h>
 
-//#define DEBUG
-
 /* general state management procedure */
 
 void initKernel();

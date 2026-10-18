@@ -1,7 +1,7 @@
-#include "Config.h"
+#include "config.h"
 #include "core.h"
 #include "kernel.h"
-#include "Display.h"
+#include "display.h"
 
 #define POTENZIOMETER_PIN A0
 

@@ -1,5 +1,5 @@
-#include "Config.h"
-#include "Display.h"
+#include "config.h"
+#include "display.h"
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -27,6 +27,8 @@ namespace Display {
     lcd.setCursor(0,0);
     lcd.print(displayStr);
 
+    #ifdef DEBUG
     Serial.println(displayStr);
+    #endif
   }
 }
