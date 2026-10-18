@@ -1,15 +1,25 @@
 #include "Config.h"
-#include "Game.h"
+#include "core.h"
+#include "kernel.h"
 #include "Display.h"
 
-const char welcomeMessage[] = "Welcome to the React! Game. Press Buttons to Start. ";
+#define POTENZIOMETER_PIN A0
 
 void setup() {
-  Serial.begin(9600);
-  Display::SetupDisplay();
+  initCore();
+  changeState(INTRO_STATE);
+  // pinMode(POTENZIOMETER_PIN, INPUT);
 }
 
 void loop() {
-  Game::Update();
+  updateStateTime();
+  switch(getCurrentState()) {
+    case INTRO_STATE:
+      intro();
+      break;
+    //aggiungi altri casi qua
+  }
+  // int value = analogRead(POTENZIOMETER_PIN);
+  // Serial.println(value);
 }
 

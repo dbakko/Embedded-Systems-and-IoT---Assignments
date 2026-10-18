@@ -27,6 +27,6 @@ namespace Display {
     lcd.setCursor(0,0);
     lcd.print(displayStr);
 
-    Serial.print(displayStr);
+    Serial.println(displayStr);
   }
 }
