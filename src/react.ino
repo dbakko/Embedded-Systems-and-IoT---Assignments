@@ -9,6 +9,7 @@ void setup() {
   initCore();
   changeState(INTRO_STATE);
   // pinMode(POTENZIOMETER_PIN, INPUT);
+  // pinMode(2, OUTPUT);
 }
 
 void loop() {
@@ -21,5 +22,6 @@ void loop() {
   }
   // int value = analogRead(POTENZIOMETER_PIN);
   // Serial.println(value);
+  // digitalWrite(2, HIGH); //accende led collegato a D2
 }
 
