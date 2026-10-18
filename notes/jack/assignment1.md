@@ -28,4 +28,6 @@ Ci metti solo uno switch che a seconda dello stato in cui ci si trova chiama una
 Gli stati possibili sono definiti in `core.h`; in `core.cpp` sono definite le operazioni da svolgere (funzioni da chiamare) nel caso ci si trovi in un qualche stato.
 Il modulo input è abbastanza auto esplicativo...
 
+> [!NOTE]
+> per attivare la modalità debug (stampa messaggi nel serial monitor) scommenta la riga in kernel.h
 

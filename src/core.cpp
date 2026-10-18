@@ -11,7 +11,7 @@ void initCore(){
 }
 
 void intro(){
-    if (isJustEnteredInState()){
+  if (isJustEnteredInState()){
     Serial.println("Intro...");
   }
   const char welcomeMessage[] = "Welcome to the React! Game. Press Buttons to Start. ";
