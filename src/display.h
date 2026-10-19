@@ -3,9 +3,7 @@
 
 #include <Arduino.h>
 
-namespace Display {
-  void SetupDisplay();
-  void displayScrollingMessage(const char *str, size_t startIndex);
-}
+void SetupDisplay();
+void displayScrollingMessage(const char *str, size_t startIndex);
 
 #endif

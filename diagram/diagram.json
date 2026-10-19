@@ -26,18 +26,12 @@
       "left": 48,
       "attrs": { "color": "green", "xray": "1" }
     },
-    {
-      "type": "wokwi-led",
-      "id": "led1",
-      "top": -262.8,
-      "left": 13.4,
-      "attrs": { "color": "red" }
-    },
+    { "type": "wokwi-led", "id": "led1", "top": -262.8, "left": 71, "attrs": { "color": "red" } },
     {
       "type": "wokwi-led",
       "id": "led2",
       "top": -262.8,
-      "left": 71,
+      "left": 13.4,
       "attrs": { "color": "green" }
     },
     {
@@ -119,10 +113,6 @@
     [ "btn2:2.l", "bb1:43b.j", "", [ "$bb" ] ],
     [ "btn2:1.r", "bb1:46b.h", "", [ "$bb" ] ],
     [ "btn2:2.r", "bb1:46b.j", "", [ "$bb" ] ],
-    [ "led1:A", "bb1:42t.b", "", [ "$bb" ] ],
-    [ "led1:C", "bb1:41t.b", "", [ "$bb" ] ],
-    [ "led2:A", "bb1:48t.b", "", [ "$bb" ] ],
-    [ "led2:C", "bb1:47t.b", "", [ "$bb" ] ],
     [ "led3:A", "bb1:57t.b", "", [ "$bb" ] ],
     [ "led3:C", "bb1:56t.b", "", [ "$bb" ] ],
     [ "led4:A", "bb1:63t.b", "", [ "$bb" ] ],
@@ -137,7 +127,11 @@
     [ "r6:1", "bb1:36t.c", "", [ "$bb" ] ],
     [ "r6:2", "bb1:30t.c", "", [ "$bb" ] ],
     [ "r7:1", "bb1:37t.d", "", [ "$bb" ] ],
-    [ "r7:2", "bb1:31t.d", "", [ "$bb" ] ]
+    [ "r7:2", "bb1:31t.d", "", [ "$bb" ] ],
+    [ "led2:A", "bb1:42t.b", "", [ "$bb" ] ],
+    [ "led2:C", "bb1:41t.b", "", [ "$bb" ] ],
+    [ "led1:A", "bb1:48t.b", "", [ "$bb" ] ],
+    [ "led1:C", "bb1:47t.b", "", [ "$bb" ] ]
   ],
   "serialMonitor": { "display": "always", "newline": "lf" },
   "dependencies": {}
