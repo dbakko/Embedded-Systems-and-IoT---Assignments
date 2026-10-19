@@ -19,6 +19,7 @@ Serial.print(F("Hello World"))
 > A cosa serve la roba qui sopra?
 
 Dichiarare una variabile `static` dentro una funzione fa si che quella variabile venga dichiarata solo alla prima chiamata e poi rimane il valore della chiamata precedente.
+L'ho utilizzata in core.cpp
 
 ---
 
