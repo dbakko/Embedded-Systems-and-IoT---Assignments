@@ -10,6 +10,7 @@ void initOutput(){
   pinMode(LED_G2_PIN, OUTPUT);
 }
 
-void toggleLed(uint8_t pin){
+void toggleLed(uint8_t pin){ //dovrei avere toggleLed oppure due funzioni (una per accendere e un altra per spegnere)?
   //TODO:
+  digitalWrite(pin, HIGH);
 }

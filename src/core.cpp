@@ -1,3 +1,4 @@
+#include "config.h"
 #include "core.h"
 #include "kernel.h"
 #include "display.h"
@@ -10,6 +11,7 @@ void initCore(){
   Serial.begin(9600);
   Display::SetupDisplay();
   initOutput();
+  toggleLed(LED_R1_PIN); //prova led
 }
 
 void intro(){
