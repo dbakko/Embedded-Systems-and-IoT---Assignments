@@ -18,7 +18,7 @@
   
 **Fase partita cominciata**  
   
-1. A partita cominciata, sull’LCD c’è scritto *Go!* e il punteggio di P1 e P2 è a zero (si dovrebbe trovare agli angoli bassi del display  
+1. A partita cominciata, sull’LCD c’è scritto *Go!* e il punteggio di P1 e P2 è a zero (si dovrebbe trovare agli angoli bassi del display)  
 2. Ad ogni round, i LED vengono spenti e l’LCD viene pulito, quindi parte un timer (gestito da un parametro chiamato MAX_WAIT) che identifica il tempo in cui appare il numero random N  
 3. Quindi, ogni giocatore dovrà reagire entro un tempo T1, e premere il numero di volte il bottone corrispondente ad N (++dobbiamo in qualche modo gestire le concorrenze? Immagino che arduino riesca a leggere due input in contemporanea e quindi fare i “calcoli” in parallelo)++  
 4. Se il giocatore indovina, si accende il led verde corrispondente per 2 secondi e il punteggio incrementa di 1  
