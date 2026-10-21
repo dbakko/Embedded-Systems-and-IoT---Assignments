@@ -21,6 +21,8 @@ Serial.print(F("Hello World"))
 Dichiarare una variabile `static` dentro una funzione fa si che quella variabile venga dichiarata solo alla prima chiamata e poi rimane il valore della chiamata precedente.
 L'ho utilizzata in core.cpp
 
+* Arduino supporta interrupt solo nei pin 2 e 3, ecco perchè colleghiamo i bottoni a questi pin
+
 ---
 
 ## Architettura

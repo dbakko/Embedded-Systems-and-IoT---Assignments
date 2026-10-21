@@ -11,10 +11,8 @@
 
 void setup() {
   initCore();
-  //initInput(); TODO:
+  initInput();
   changeState(INTRO_STATE);
-  // pinMode(7, INPUT);
-  // enableInterrupt(7, prova
 }
 
 void loop() {

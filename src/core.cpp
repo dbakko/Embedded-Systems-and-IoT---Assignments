@@ -2,6 +2,7 @@
 #include "core.h"
 #include "kernel.h"
 #include "display.h"
+#include "input.h"
 #include "output.h"
 #include <Arduino.h>
 
@@ -13,9 +14,15 @@ void initCore(){
 }
 
 void intro(){
+  updateStateTime();
   if (isJustEnteredInState()){
     Serial.println("Intro...");
   }
+
+  if (isButtonPressed(0)){
+    Serial.println("BOTTONE PREMUTO");
+  }
+
   static size_t index = 0; //viene allocata solo alla prima chiamata
   const char welcomeMessage[] = "Welcome to the React! Game. Press Buttons to Start. ";
 

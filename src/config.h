@@ -11,8 +11,8 @@
 #define LED_G2_PIN 7
 
 #define NUM_BUTTONS 2
-#define BUT1_PIN 3
-#define BUT2_PIN 2
+#define BTN1_PIN 3
+#define BTN2_PIN 2
 
 #define POT_PIN A0
 
