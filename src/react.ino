@@ -1,4 +1,5 @@
 #include "config.h"
+#include "input.h"
 #include "core.h"
 #include "kernel.h"
 #include "display.h"

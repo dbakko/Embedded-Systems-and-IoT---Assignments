@@ -18,13 +18,13 @@ void buttonHandler1(){ buttonHandler(1); }
 
 void (*buttonHandlers[NUM_BUTTONS])() = { buttonHandler0, buttonHandler1 };
 
-void buttonHandler(int i){
+void buttonHandler(int i){ 
   long ts = millis();
   if (ts - lastButtonPressedTimestamps[i] > BOUNCING_TIME){
     lastButtonPressedTimestamps[i] = ts;
     int status = digitalRead(inputPins[i]);
     if (status == HIGH && !buttonPressed[i]) {
-      buttonPressed[i] = true;
+        buttonPressed[i] = true;
     }
   }
 }
@@ -43,10 +43,8 @@ void resetInput(){
     lastButtonPressedTimestamps[i] = ts;
   }
 }
+
 bool isButtonPressed(int buttonIndex){
   return buttonPressed[buttonIndex];
 }
 
-bool hasBeenPressed(int index){
-  return buttonPressed[index];
-}

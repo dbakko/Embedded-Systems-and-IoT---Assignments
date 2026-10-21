@@ -14,13 +14,18 @@ void initCore(){
 }
 
 void intro(){
-  updateStateTime();
   if (isJustEnteredInState()){
     Serial.println("Intro...");
   }
 
+  // prova bottoni
   if (isButtonPressed(0)){
-    Serial.println("BOTTONE PREMUTO");
+    Serial.println("BOTTONE SINISTRO PREMUTO");
+    resetInput();
+  }
+  if (isButtonPressed(1)){
+    Serial.println("BOTTONE DESTRO PREMUTO");
+    resetInput();
   }
 
   static size_t index = 0; //viene allocata solo alla prima chiamata
