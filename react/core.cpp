@@ -28,10 +28,8 @@ void intro(){
     resetInput();
   }
 
-  static size_t index = 0; //viene allocata solo alla prima chiamata
   const char welcomeMessage[] = "Welcome to the React! Game. Press Buttons to Start. ";
 
-  displayScrollingMessage(welcomeMessage, index++);
-  if(index > sizeof(welcomeMessage) - 1) index = 0;
+  displayScrollingMessage(welcomeMessage, millis());
 }
 

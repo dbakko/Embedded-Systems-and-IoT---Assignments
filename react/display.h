@@ -4,6 +4,6 @@
 #include <Arduino.h>
 
 void SetupDisplay();
-void displayScrollingMessage(const char *str, size_t startIndex);
+void displayScrollingMessage(const char *str, long time);
 
 #endif

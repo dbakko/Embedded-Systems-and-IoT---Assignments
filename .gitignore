@@ -10,6 +10,7 @@ build/
 .vscode/
 
 # Local clangd configuration
+/react/.clangd
 /src/.clangd
 
 # Editor and OS files
