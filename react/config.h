@@ -3,6 +3,7 @@
 
 #define LCD_COLS 16
 #define LCD_ROWS 2
+#define DISPLAY_REFRESH_MILLIS 3000
 
 #define NUM_LEDS 4
 #define LED_G1_PIN 4

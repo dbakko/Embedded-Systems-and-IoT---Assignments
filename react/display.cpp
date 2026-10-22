@@ -3,8 +3,6 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 
-#define DISPLAY_REFRESH_MILLIS 3000
-
 //initialize the liquid crystal library
 //the first parameter is  the I2C address
 LiquidCrystal_I2C lcd(0x27,  LCD_COLS, LCD_ROWS);
