@@ -2,17 +2,14 @@
 #include "input.h"
 #include "core.h"
 #include "kernel.h"
+#include "output.h"
 #include "display.h"
-
-// void prova(){
-//   Serial.println("Button Pressed");
-// }
-//
-// void (*prova_ptr)();
 
 void setup() {
   initCore();
   initInput();
+  initDisplay();
+  initOutput();
   changeState(INTRO_STATE);
 }
 

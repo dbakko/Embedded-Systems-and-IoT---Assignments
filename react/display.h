@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-void SetupDisplay();
+void initDisplay();
 void displayScrollingMessage(const char *str, long time);
 
 #endif

@@ -7,7 +7,7 @@
 //the first parameter is  the I2C address
 LiquidCrystal_I2C lcd(0x27,  LCD_COLS, LCD_ROWS);
 
-void SetupDisplay(){
+void initDisplay(){
   lcd.init();
   lcd.backlight();
 }

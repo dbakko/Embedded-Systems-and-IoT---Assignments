@@ -8,8 +8,6 @@
 
 void initCore(){
   Serial.begin(9600);
-  SetupDisplay();
-  initOutput();
   toggleLed(LED_R1_PIN); //prova led
 }
 
