@@ -5,6 +5,10 @@
 #include "input.h"
 #include "output.h"
 #include <Arduino.h>
+int brightness = 0;
+int fadeAmount = 5;
+
+void ledFade(int led1, int led2);
 
 void initCore(){
   Serial.begin(9600);
@@ -29,5 +33,16 @@ void intro(){
   const char welcomeMessage[] = "Welcome to the React! Game. Press Buttons to Start. ";
 
   displayScrollingMessage(welcomeMessage, millis());
+  ledFade(LED_R1_PIN, LED_R2_PIN);
+}
+
+void ledFade(int led1, int led2){
+  analogWrite(led1, brightness);
+  analogWrite(led2, 255 - brightness);
+  brightness = brightness + fadeAmount;
+  if ( brightness == 0 || brightness == 255) {
+    fadeAmount = -fadeAmount;
+  }
+  delay(30);
 }
 
