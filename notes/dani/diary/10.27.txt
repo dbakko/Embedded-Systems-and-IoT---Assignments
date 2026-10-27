@@ -1,0 +1,12 @@
+Prima nota, qui ci scrivo un po' cosa ho fatto, oltre ai 
+commit, similmente alle note di OOP insomma.
+
+Giusto per ricordarmi per parlarne con te:
+
+- Ho creato la funzione ledFade (ho copiato banalmente
+dalle slide era già pronta, ho giusto aggiunto il fatto
+che sia alternato tra LED_R1_PIN e LED_R2_PIN)
+- Volevo capire se ha senso creare queste mini-funzioni
+ad-hoc nei file già presenti, creare un file con queste
+mini-funzioni oppure scrivere direttamente nel "main",
+insomma ne parliamo domani ;)
