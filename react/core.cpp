@@ -5,23 +5,34 @@
 #include "input.h"
 #include "output.h"
 #include <Arduino.h>
-int brightness = 0;
+#include <avr/sleep.h>
+#include <avr/power.h>
+
+
+int brightness = 0; //queste costanti dove possiamo metterle?
 int fadeAmount = 5;
+unsigned long initialTime = 0;
 
 void ledFade(int led1, int led2);
+void deepSleepState();
 
 void initCore(){
   Serial.begin(9600);
-  toggleLed(LED_R1_PIN); //prova led
+  //toggleLed(LED_R1_PIN); //prova led
 }
 
 void intro(){
   if (isJustEnteredInState()){
     Serial.println("Intro...");
+    initialTime= millis();
+  }
+
+  if (isButtonPressed(0) && isButtonPressed(1)){
+    //da implementare con gli stati
   }
 
   // prova bottoni
-  if (isButtonPressed(0)){
+ /* if (isButtonPressed(0)){
     Serial.println("BOTTONE SINISTRO PREMUTO");
     resetInput();
   }
@@ -29,14 +40,17 @@ void intro(){
     Serial.println("BOTTONE DESTRO PREMUTO");
     resetInput();
   }
-
+*/
   const char welcomeMessage[] = "Welcome to the React! Game. Press Buttons to Start. ";
 
   displayScrollingMessage(welcomeMessage, millis());
   ledFade(LED_R1_PIN, LED_R2_PIN);
+  if (millis() - initialTime >= 10000){
+    deepSleepState();
+  }
 }
 
-void ledFade(int led1, int led2){
+void ledFade(int led1, int led2){ //funzione accessoria, da mettere in un nuovo file/file diverso o teniamo qui?
   analogWrite(led1, brightness);
   analogWrite(led2, 255 - brightness);
   brightness = brightness + fadeAmount;
@@ -44,5 +58,22 @@ void ledFade(int led1, int led2){
     fadeAmount = -fadeAmount;
   }
   delay(30);
+
+}
+
+void deepSleepState(){
+  Serial.println("Entro in Deep Sleep...");
+  delay(1000);
+  digitalWrite(LED_R1_PIN, LOW);
+  digitalWrite(LED_R2_PIN, LOW);
+  turnOffDisplay();
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  sleep_enable();
+  sleep_cpu();  
+  //Quando viene risvegliato, forse da spostare!
+  initDisplay();
+  Serial.println("Risvegliato! Ritorno all'intro.");
+  initialTime = millis(); // Resetta il timer dei 10 secondi
+  resetInput();           // Pulisce lo stato dei bottoni
 }
 

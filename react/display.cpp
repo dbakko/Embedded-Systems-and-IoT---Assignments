@@ -12,6 +12,11 @@ void initDisplay(){
   lcd.backlight();
 }
 
+void turnOffDisplay() {
+  lcd.noDisplay();      
+  lcd.noBacklight();    
+}
+
 void displayScrollingMessage(const char *str, long time){
   char displayStr[LCD_COLS + 1];
 

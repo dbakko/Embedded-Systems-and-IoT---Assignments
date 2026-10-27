@@ -5,5 +5,6 @@
 
 void initDisplay();
 void displayScrollingMessage(const char *str, long time);
+void turnOffDisplay();
 
 #endif
