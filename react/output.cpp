@@ -6,7 +6,6 @@ int brightness = 0; //queste costanti dove possiamo metterle?
 int fadeAmount = 5;
 
 void initOutput(){
-  // pinMode(POT_PIN, INPUT); va nell'input
   pinMode(LED_R1_PIN, OUTPUT);
   pinMode(LED_G1_PIN, OUTPUT);
   pinMode(LED_R2_PIN, OUTPUT);

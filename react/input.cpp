@@ -12,6 +12,7 @@ bool buttonPressed[NUM_BUTTONS] = {false, false};
 /* used for debouncing */
 long lastButtonPressedTimestamps[NUM_BUTTONS];
 
+// pinMode(POT_PIN, INPUT);
 void buttonHandler(int i);
 void buttonHandler0(){ buttonHandler(0); }
 void buttonHandler1(){ buttonHandler(1); }

@@ -17,6 +17,27 @@ void turnOffDisplay() {
   lcd.noBacklight();    
 }
 
+void displayMessage(const char *str, int col, int row) { // Go! 
+  lcd.setCursor(col, row);
+  lcd.print(str);
+}
+
+void displayScores(int score1, int score2) { // Per i punteggi
+  // Pulisci l'intera riga in basso prima di scrivere i nuovi punteggi (supponendo 16 colonne)
+  lcd.setCursor(0, 1);
+  lcd.print("                "); 
+  
+  // Stampa il punteggio del Player 1 a sinistra
+  lcd.setCursor(0, 1);
+  lcd.print("P1:");
+  lcd.print(score1);
+
+  // Stampa il punteggio del Player 2 a destra (allineato verso la fine della riga)
+  lcd.setCursor(10, 1);
+  lcd.print("P2:");
+  lcd.print(score2);
+}
+
 void displayScrollingMessage(const char *str, long time){
   char displayStr[LCD_COLS + 1];
 
