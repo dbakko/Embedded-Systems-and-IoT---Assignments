@@ -8,9 +8,6 @@
 #include <avr/sleep.h>
 #include <avr/power.h>
 
-
-int brightness = 0; //queste costanti dove possiamo metterle?
-int fadeAmount = 5;
 unsigned long initialTime = 0;
 
 void ledFade(int led1, int led2);
@@ -45,23 +42,15 @@ void intro(){
 
   displayScrollingMessage(welcomeMessage, millis());
   ledFade(LED_R1_PIN, LED_R2_PIN);
-  if (millis() - initialTime >= 10000){
+  if (millis() - initialTime >= MAX_TIME_IN_INTRO_STATE){
     deepSleepState();
   }
 }
 
-void ledFade(int led1, int led2){ //funzione accessoria, da mettere in un nuovo file/file diverso o teniamo qui?
-  analogWrite(led1, brightness);
-  analogWrite(led2, 255 - brightness);
-  brightness = brightness + fadeAmount;
-  if ( brightness == 0 || brightness == 255) {
-    fadeAmount = -fadeAmount;
-  }
-  delay(30);
+void game(){
+};
 
-}
-
-void deepSleepState(){
+void deepSleepState(){ //nuovo stato?
   Serial.println("Entro in Deep Sleep...");
   delay(1000);
   digitalWrite(LED_R1_PIN, LOW);
@@ -69,7 +58,7 @@ void deepSleepState(){
   turnOffDisplay();
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
-  sleep_cpu();  
+  sleep_cpu();
   //Quando viene risvegliato, forse da spostare!
   initDisplay();
   Serial.println("Risvegliato! Ritorno all'intro.");

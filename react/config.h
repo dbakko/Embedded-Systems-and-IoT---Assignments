@@ -15,6 +15,8 @@
 #define BTN1_PIN 3
 #define BTN2_PIN 2
 
+#define MAX_TIME_IN_INTRO_STATE 10000
+
 #define POT_PIN A0
 
 #endif
