@@ -47,13 +47,11 @@ void intro(){
     Serial.println("GIOCO AVVIATO!");
     digitalWrite(LED_R1_PIN, LOW);
     digitalWrite(LED_R2_PIN, LOW);
-    displayScrollingMessage("Choose the game difficulty", 0, 0);
-    displayMessage(DIFFICULTY);
-    displayMessage()
-
-    displayMessage("      Go!      ", 0, 0);
+    //displayScrollingMessage("Choose the game difficulty", 0);
+    //displayMessage(DIFFICULTY);
+    displayMessage("      Go!      ",0,0);
     resetInput();
-    // setState(GAME_STATE); //Da cambiare stato in "gioco avviato"
+    changeState(GAME_STATE); 
     return;
 
   }
@@ -62,7 +60,11 @@ void intro(){
 }
 
 void game(){
-};
+  if (isJustEnteredInState()) {
+    Serial.println("Siamo nello stato di gioco farlocco!");
+    displayMessage(" In Game (Test) ", 0, 0);
+  }
+}
 
 void deepSleepState(){ //nuovo stato?
   Serial.println("Entro in Deep Sleep...");
@@ -76,7 +78,7 @@ void deepSleepState(){ //nuovo stato?
   //Quando viene risvegliato, forse da spostare!
   initDisplay();
   Serial.println("Risvegliato! Ritorno all'intro.");
-  initialTime = millis(); // Resetta il timer dei 10 secondi
+  changeState(INTRO_STATE); 
   resetInput();           // Pulisce lo stato dei bottoni
 }
 

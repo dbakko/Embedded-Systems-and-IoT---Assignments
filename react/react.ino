@@ -19,6 +19,9 @@ void loop() {
     case INTRO_STATE:
       intro();
       break;
+    case GAME_STATE:
+      game();
+      break;
     //aggiungi altri casi qua
   }
 }
