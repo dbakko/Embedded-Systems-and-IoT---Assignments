@@ -2,7 +2,7 @@
 #include "config.h"
 #include <Arduino.h>
 
-int brightness = 0; //queste costanti dove possiamo metterle?
+int brightness = 0; 
 int fadeAmount = 5;
 
 void initOutput(){

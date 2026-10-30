@@ -10,6 +10,8 @@
 
 unsigned long initialTime = 0;
 
+void checkPotentiometer();
+
 void ledFade(int led1, int led2);
 void deepSleepState();
 void setDifficulty(); // da vedere se mettere qui in core o altrove
@@ -62,7 +64,7 @@ void intro(){
 void game(){
   if (isJustEnteredInState()) {
     Serial.println("Siamo nello stato di gioco farlocco!");
-    displayMessage(" In Game (Test) ", 0, 0);
+    //displayMessage(" In Game (Test) ", 0, 0);
   }
 }
 
@@ -87,3 +89,25 @@ void setDifficulty(){
   difficoltà*/
 }
 
+void checkPotentiometer() {
+  int potValue = analogRead(A0);
+  
+  Serial.print("Valore potenziometro: ");
+  Serial.println(potValue);
+  int difficultyLevel;
+  //map(potValue, 0, 1024, 1, 4);
+  /* Sembra che il map non sia proprio il massimo, 
+  il 4 livello sballa di brutto! Provo sta soluzione più "manuale" */
+  if (potValue < 300) {
+    difficultyLevel = 1;
+} else if (potValue < 500) {
+    difficultyLevel = 2;
+} else if (potValue < 800) {
+    difficultyLevel = 3;
+} else {
+    difficultyLevel = 4;
+}
+  Serial.println(difficultyLevel);
+  
+  delay(2005); // Un piccolo ritardo per non intasare il monitor seriale
+}
