@@ -11,6 +11,6 @@
 void initCore();
 void intro();
 void game();
-void checkPotentiometer();
+void setDifficulty();
 
 #endif

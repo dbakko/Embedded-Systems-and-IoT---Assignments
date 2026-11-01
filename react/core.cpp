@@ -51,18 +51,18 @@ void intro(){
     digitalWrite(LED_R2_PIN, LOW);
     //displayScrollingMessage("Choose the game difficulty", 0);
     //displayMessage(DIFFICULTY);
-    displayMessage("      Go!      ",0,0);
+    //displayMessage("      Go!      ",0,0);
     resetInput();
     changeState(GAME_STATE); 
     return;
 
   }
 
-  
 }
 
 void game(){
   if (isJustEnteredInState()) {
+    setDifficulty();
     Serial.println("Siamo nello stato di gioco farlocco!");
     //displayMessage(" In Game (Test) ", 0, 0);
   }
@@ -83,16 +83,14 @@ void deepSleepState(){ //nuovo stato?
   changeState(INTRO_STATE); 
   resetInput();           // Pulisce lo stato dei bottoni
 }
+/**
+ * traduco da segnale analogico del potenziometro nei 4 livelli difficoltà
+ * */
 
 void setDifficulty(){
-  /*traduco da segnale analogico del potenziometro nei 4 livelli di
-  difficoltà*/
-}
-
-void checkPotentiometer() {
-  int potValue = analogRead(A0);
-  
+  displayScrollingMessage("Choose the difficulty: 1-easy 4-hard", millis());
   Serial.print("Valore potenziometro: ");
+  long potValue = analogRead(POT_PIN);
   Serial.println(potValue);
   int difficultyLevel;
   //map(potValue, 0, 1024, 1, 4);
@@ -108,6 +106,8 @@ void checkPotentiometer() {
     difficultyLevel = 4;
 }
   Serial.println(difficultyLevel);
+  displayMessage(difficultyLevel, 0, 1);
   
-  delay(2005); // Un piccolo ritardo per non intasare il monitor seriale
+  delay(1000); 
 }
+

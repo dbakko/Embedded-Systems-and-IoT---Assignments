@@ -14,7 +14,6 @@ void setup() {
 }
 
 void loop() {
-  checkPotentiometer();
   updateStateTime();
   switch(getCurrentState()) {
     case INTRO_STATE:
