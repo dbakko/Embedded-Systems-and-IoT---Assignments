@@ -88,6 +88,7 @@ void deepSleepState(){ //nuovo stato?
  * */
 
 void setDifficulty(){
+  clearDisplay();
   displayScrollingMessage("Choose the difficulty: 1-easy 4-hard", millis());
   Serial.print("Valore potenziometro: ");
   long potValue = analogRead(POT_PIN);

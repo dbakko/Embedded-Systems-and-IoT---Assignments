@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 void initDisplay();
+void clearDisplay();
 void displayScrollingMessage(const char *str, long time);
 void turnOffDisplay();
 void displayMessage(const char *str, int col, int row);
