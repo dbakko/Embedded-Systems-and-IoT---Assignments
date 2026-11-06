@@ -19,9 +19,13 @@ void loop() {
     case INTRO_STATE:
       intro();
       break;
+    case SET_DIFFICULTY_STATE:
+      setDifficulty();
+      break;
     case GAME_STATE:
       game();
       break;
-    //aggiungi altri casi qua
+    case DEEP_SLEEP_STATE:
+      deepSleep();
   }
 }

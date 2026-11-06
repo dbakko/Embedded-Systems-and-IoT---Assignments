@@ -9,16 +9,17 @@
 #include <avr/power.h>
 
 unsigned long initialTime = 0;
+unsigned long difficultyEntryTime = 0;
+int selectedDifficulty = 1;
 
 void checkPotentiometer();
 
 void ledFade(int led1, int led2);
-void deepSleepState();
-void setDifficulty(); // da vedere se mettere qui in core o altrove
+void deepSleep();
+void setDifficulty();
 
 void initCore(){
   Serial.begin(9600);
-  //toggleLed(LED_R1_PIN); //prova led
 }
 
 void intro(){
@@ -27,88 +28,91 @@ void intro(){
     initialTime= millis();
   }
 
-  // prova bottoni
- /* if (isButtonPressed(0)){
-    Serial.println("BOTTONE SINISTRO PREMUTO");
-    resetInput();
-  }
-  if (isButtonPressed(1)){
-    Serial.println("BOTTONE DESTRO PREMUTO");
-    resetInput();
-  }
-*/
   const char welcomeMessage[] = "Welcome to the React! Game. Press Buttons to Start. ";
 
   displayScrollingMessage(welcomeMessage, millis());
   ledFade(LED_R1_PIN, LED_R2_PIN);
   if (millis() - initialTime >= MAX_TIME_IN_INTRO_STATE){
-    deepSleepState();
+    changeState(DEEP_SLEEP_STATE);
+    return;
   }
 
   if (isButtonPressed(0) && isButtonPressed(1)){
-    Serial.println("GIOCO AVVIATO!");
     digitalWrite(LED_R1_PIN, LOW);
     digitalWrite(LED_R2_PIN, LOW);
-    //displayScrollingMessage("Choose the game difficulty", 0);
-    //displayMessage(DIFFICULTY);
-    //displayMessage("      Go!      ",0,0);
     resetInput();
-    changeState(GAME_STATE); 
+    changeState(SET_DIFFICULTY_STATE); 
     return;
+  }
+}
 
+void setDifficulty(){
+  if (isJustEnteredInState()){
+    Serial.println("Entrato in Selezione difficoltà...");
+    difficultyEntryTime = millis();
+    resetInput();
   }
 
+  displayScrollingMessage("Choose difficulty: 1-easy 4-hard", millis());
+  
+  // Lettura potenziometro
+  long potValue = analogRead(POT_PIN);
+  if (potValue < 300) {
+    selectedDifficulty = 1;
+  } else if (potValue < 500) {
+    selectedDifficulty = 2;
+  } else if (potValue < 800) {
+    selectedDifficulty = 3;
+  } else {
+    selectedDifficulty = 4;
+  }
+  // Mostra il livello attuale sulla seconda riga
+  char buffer[16];
+  sprintf(buffer, "Level: %d", selectedDifficulty);
+  displayMessage(buffer, 0, 1);
+
+  // Dopo 5 secondi, la difficoltà viene confermata e parte la partita
+  if (millis() - difficultyEntryTime >= 10000) {
+    Serial.print("Difficolta' confermata automaticamente: ");
+    Serial.println(selectedDifficulty);
+    
+    // Passa allo stato di gioco vero e proprio
+    changeState(GAME_STATE);
+    return;
+  }
 }
 
 void game(){
   if (isJustEnteredInState()) {
-    setDifficulty();
     Serial.println("Siamo nello stato di gioco farlocco!");
-    //displayMessage(" In Game (Test) ", 0, 0);
+    clearDisplay();
+    displayMessage("      Go!      ",0,0);
   }
 }
 
-void deepSleepState(){ //nuovo stato?
-  Serial.println("Entro in Deep Sleep...");
-  delay(1000);
-  digitalWrite(LED_R1_PIN, LOW);
-  digitalWrite(LED_R2_PIN, LOW);
-  turnOffDisplay();
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-  sleep_enable();
-  sleep_cpu();
-  //Quando viene risvegliato, forse da spostare!
-  initDisplay();
-  Serial.println("Risvegliato! Ritorno all'intro.");
-  changeState(INTRO_STATE); 
-  resetInput();           // Pulisce lo stato dei bottoni
-}
-/**
- * traduco da segnale analogico del potenziometro nei 4 livelli difficoltà
- * */
+void deepSleep(){ 
+  if (isJustEnteredInState()) {
+    Serial.println("Entro in Deep Sleep...");
+    delay(100);
+    // Disattiva led e display
+    digitalWrite(LED_R1_PIN, LOW);
+    digitalWrite(LED_R2_PIN, LOW);
+    turnOffDisplay();
 
-void setDifficulty(){
-  clearDisplay();
-  displayScrollingMessage("Choose the difficulty: 1-easy 4-hard", millis());
-  Serial.print("Valore potenziometro: ");
-  long potValue = analogRead(POT_PIN);
-  Serial.println(potValue);
-  int difficultyLevel;
-  //map(potValue, 0, 1024, 1, 4);
-  /* Sembra che il map non sia proprio il massimo, 
-  il 4 livello sballa di brutto! Provo sta soluzione più "manuale" */
-  if (potValue < 300) {
-    difficultyLevel = 1;
-} else if (potValue < 500) {
-    difficultyLevel = 2;
-} else if (potValue < 800) {
-    difficultyLevel = 3;
-} else {
-    difficultyLevel = 4;
+    // Entra nello stato di sleep, addormenta la CPU
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    sleep_cpu(); 
+
+    // Risveglio
+    sleep_disable();
+    initDisplay();
+    Serial.println("Risvegliato! Ritorno all'intro.");
+    changeState(INTRO_STATE); 
+    resetInput();           
+  }
 }
-  Serial.println(difficultyLevel);
-  displayMessage(difficultyLevel, 0, 1);
-  
-  delay(1000); 
-}
+
+
+
 
