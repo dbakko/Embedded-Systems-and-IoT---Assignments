@@ -18,19 +18,41 @@ The game board includes two green leds (L1, L3), two red leds (L2, L4), two tact
 
 - In the initial state, all green leds should be off and red led L2 and L3 should be pulsing (fading in and out) in counterphase (when L2 is fading in, L3 should be fading out and viceversa), waiting for two players to start the game.  The LCD should display the message   `Welcome to the React! Game. Press Buttons to Start` on a single line. The message should be animated, displaying only a substring of a size limited to the display line length and rotating, continuously. 
 
+**FATTO!**
+
+
 - The game starts when both button B1 and the button B2 are pressed.  If the buttons are not pressed within 10 seconds, the system must go into deep sleeping. The system can be awoken back  by pressing either B1 or B2 button. Once awoken, the system goes in the initial state and the led Ls starts pulsing again.  When the game starts, all leds are turned off and a `Go!` message is displayed on the LCD. The score of both players is set to zero.
 
 - During the game, at each round:
   - The leds are turned off and, the LCD cleared, and after a random amount of time between 0 and MAX_WAIT milliseconds (another parameter, e.g. 5000), a  number N between 1 and 3 is displayed on the LCD.
+
+**DANI**
+
+
   - Then, players has max T1 time for reacting and pressing their buttons N times
   - The first player who presses the button for N times wins the round
     - her/his green led (L1 for player #1, L4 for player #2) is turned on for 2 seconds and her/his score is incremenented by one.
+  
+**JACK**
+
+
   - If a player presses the button too early (before the number N is displayed) or a wrong number of times, then her/his red led (L2 for player #1, L3 for player #2) is turned on for 2 seconds and her/his score is decremented by one. 
+
+**DANI**
+
+
   - If no players press their button within T1 seconds, then the game ends. If there is a winner (no tie), a message `Game Over - The winner is XX` (where `XX` is either 'P1' or 'P2') is displayed on the LCD (string animated, rotating) for 10 seconds, then the game restarts from the initial state. In the case of tie, the message `Game Over - Tie` is displayed instead.
- 
+
+**DANI**
+
+
 - At the end of each round (but in case of game over), while the green or red leds are turned on, players' score is displayed on the LCD (e.g with one score aligned left and one aligned right).
 
+**DANI**
+
 - Every new round the time T1 is reduced of some factor F (parameter of the program), that depends on a difficulty level L chosen players before starting the game, using the Pot device. In particular, the level L could be a value in the range 1..4 (1 easiest, 4 most difficult). The level affects the value of the factor F (so that the more difficult the game is, the greater the factor F must be). 
+
+**JACK**
 
 
 ### The assignment
