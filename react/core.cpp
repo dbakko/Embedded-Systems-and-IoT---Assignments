@@ -11,12 +11,14 @@
 unsigned long initialTime = 0;
 unsigned long difficultyEntryTime = 0;
 int selectedDifficulty = 1;
+int MAX_WAIT = 5000;
 
 void checkPotentiometer();
 
 void ledFade(int led1, int led2);
 void deepSleep();
 void setDifficulty();
+void gameRound();
 
 void initCore(){
   Serial.begin(9600);
@@ -28,7 +30,7 @@ void intro(){
     initialTime= millis();
   }
 
-  const char welcomeMessage[] = "Welcome to the React! Game. Press Buttons to Start. ";
+  const char welcomeMessage[] = "  Welcome to the React! Game. Press Buttons to Start. ";
 
   displayScrollingMessage(welcomeMessage, millis());
   ledFade(LED_R1_PIN, LED_R2_PIN);
@@ -53,7 +55,7 @@ void setDifficulty(){
     resetInput();
   }
 
-  displayScrollingMessage("Choose difficulty: 1-easy 4-hard", millis());
+  displayScrollingMessage(" Choose difficulty: 1-easy 4-hard", millis());
   
   // Lettura potenziometro
   long potValue = analogRead(POT_PIN);
@@ -84,9 +86,12 @@ void setDifficulty(){
 
 void game(){
   if (isJustEnteredInState()) {
-    Serial.println("Siamo nello stato di gioco farlocco!");
+    Serial.println("Siamo nello stato di gioco!");
     clearDisplay();
     displayMessage("      Go!      ",0,0);
+    displayScores(0,0);
+    delay(1000);
+    gameRound();
   }
 }
 
@@ -111,6 +116,33 @@ void deepSleep(){
     changeState(INTRO_STATE); 
     resetInput();           
   }
+}
+
+void gameRound() {
+  // Spengo i led ed il display
+  digitalWrite(LED_R1_PIN, LOW);
+  digitalWrite(LED_R2_PIN, LOW);
+  digitalWrite(LED_G1_PIN, LOW); 
+  digitalWrite(LED_G2_PIN, LOW); 
+  clearDisplay();
+  // Qui bisognerà mettere i valori reali ogni round
+  displayScores(0,0);
+
+  // Genera un tempo di attesa casuale tra 0 e MAX_WAIT millisecondi
+  unsigned long waitTime = random(0, MAX_WAIT + 1);
+  unsigned long startTime = millis();
+
+  while (millis() - startTime < waitTime) {
+    // Qui ci sarà il controllo dei bottoni?
+  }
+
+  // Numero random da indovinare
+  int N = random(1, 4); 
+  char buffer[16];
+  sprintf(buffer, "       %d   ", N);
+  displayMessage(buffer, 0, 0);
+  Serial.print("Round avviato. Numero N estratto: ");
+  Serial.println(N);
 }
 
 

@@ -36,7 +36,7 @@ void displayMessage(const char *str, int col, int row) { // Go!
 }
 
 void displayScores(int score1, int score2) { // Per i punteggi
-  // Pulisci l'intera riga in basso prima di scrivere i nuovi punteggi (supponendo 16 colonne)
+  // Pulisci l'intera riga in basso prima di scrivere i nuovi punteggi 
   lcd.setCursor(0, 1);
   lcd.print("                "); 
   

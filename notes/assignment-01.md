@@ -23,9 +23,12 @@ The game board includes two green leds (L1, L3), two red leds (L2, L4), two tact
 
 - The game starts when both button B1 and the button B2 are pressed.  If the buttons are not pressed within 10 seconds, the system must go into deep sleeping. The system can be awoken back  by pressing either B1 or B2 button. Once awoken, the system goes in the initial state and the led Ls starts pulsing again.  When the game starts, all leds are turned off and a `Go!` message is displayed on the LCD. The score of both players is set to zero.
 
+**FATTO!**
+
 - During the game, at each round:
   - The leds are turned off and, the LCD cleared, and after a random amount of time between 0 and MAX_WAIT milliseconds (another parameter, e.g. 5000), a  number N between 1 and 3 is displayed on the LCD.
 
+**FATTO**
 **DANI**
 
 
