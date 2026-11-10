@@ -35,7 +35,7 @@ The game board includes two green leds (L1, L3), two red leds (L2, L4), two tact
   - Then, players has max T1 time for reacting and pressing their buttons N times
   - The first player who presses the button for N times wins the round
     - her/his green led (L1 for player #1, L4 for player #2) is turned on for 2 seconds and her/his score is incremenented by one.
-  
+ 
 **JACK**
 
 

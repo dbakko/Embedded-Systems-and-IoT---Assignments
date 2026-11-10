@@ -43,8 +43,31 @@ void intro(){
     digitalWrite(LED_R1_PIN, LOW);
     digitalWrite(LED_R2_PIN, LOW);
     resetInput();
-    changeState(SET_DIFFICULTY_STATE); 
+    changeState(SET_DIFFICULTY_STATE);
     return;
+  }
+}
+
+void deepSleep(){
+  if (isJustEnteredInState()) {
+    Serial.println("Entro in Deep Sleep...");
+    delay(100);
+    // Disattiva led e display
+    digitalWrite(LED_R1_PIN, LOW);
+    digitalWrite(LED_R2_PIN, LOW);
+    turnOffDisplay();
+
+    // Entra nello stato di sleep, addormenta la CPU
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    sleep_cpu(); 
+
+    // Risveglio
+    sleep_disable();
+    initDisplay();
+    Serial.println("Risvegliato! Ritorno all'intro.");
+    changeState(INTRO_STATE);
+    resetInput();
   }
 }
 
@@ -56,7 +79,7 @@ void setDifficulty(){
   }
 
   displayScrollingMessage(" Choose difficulty: 1-easy 4-hard", millis());
-  
+
   // Lettura potenziometro
   long potValue = analogRead(POT_PIN);
   if (potValue < 300) {
@@ -77,7 +100,7 @@ void setDifficulty(){
   if (millis() - difficultyEntryTime >= 10000) {
     Serial.print("Difficolta' confermata automaticamente: ");
     Serial.println(selectedDifficulty);
-    
+
     // Passa allo stato di gioco vero e proprio
     changeState(GAME_STATE);
     return;
@@ -95,35 +118,12 @@ void game(){
   }
 }
 
-void deepSleep(){ 
-  if (isJustEnteredInState()) {
-    Serial.println("Entro in Deep Sleep...");
-    delay(100);
-    // Disattiva led e display
-    digitalWrite(LED_R1_PIN, LOW);
-    digitalWrite(LED_R2_PIN, LOW);
-    turnOffDisplay();
-
-    // Entra nello stato di sleep, addormenta la CPU
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-    sleep_enable();
-    sleep_cpu(); 
-
-    // Risveglio
-    sleep_disable();
-    initDisplay();
-    Serial.println("Risvegliato! Ritorno all'intro.");
-    changeState(INTRO_STATE); 
-    resetInput();           
-  }
-}
-
 void gameRound() {
   // Spengo i led ed il display
   digitalWrite(LED_R1_PIN, LOW);
   digitalWrite(LED_R2_PIN, LOW);
-  digitalWrite(LED_G1_PIN, LOW); 
-  digitalWrite(LED_G2_PIN, LOW); 
+  digitalWrite(LED_G1_PIN, LOW);
+  digitalWrite(LED_G2_PIN, LOW);
   clearDisplay();
   // Qui bisognerà mettere i valori reali ogni round
   displayScores(0,0);
@@ -137,14 +137,11 @@ void gameRound() {
   }
 
   // Numero random da indovinare
-  int N = random(1, 4); 
+  int N = random(1, 4);
   char buffer[16];
   sprintf(buffer, "       %d   ", N);
   displayMessage(buffer, 0, 0);
   Serial.print("Round avviato. Numero N estratto: ");
   Serial.println(N);
 }
-
-
-
 
