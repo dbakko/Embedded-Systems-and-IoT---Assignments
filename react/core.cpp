@@ -12,6 +12,8 @@ unsigned long initialTime = 0;
 unsigned long difficultyEntryTime = 0;
 int selectedDifficulty = 1;
 int MAX_WAIT = 5000;
+int p1score = 0;
+int p2score = 0;
 
 void checkPotentiometer();
 
@@ -27,7 +29,7 @@ void initCore(){
 void intro(){
   if (isJustEnteredInState()){
     Serial.println("Intro...");
-    initialTime= millis();
+    initialTime = millis();
   }
 
   const char welcomeMessage[] = "  Welcome to the React! Game. Press Buttons to Start. ";
@@ -60,7 +62,7 @@ void deepSleep(){
     // Entra nello stato di sleep, addormenta la CPU
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    sleep_cpu(); 
+    sleep_cpu();
 
     // Risveglio
     sleep_disable();
@@ -112,10 +114,11 @@ void game(){
     Serial.println("Siamo nello stato di gioco!");
     clearDisplay();
     displayMessage("      Go!      ",0,0);
-    displayScores(0,0);
     delay(1000);
-    gameRound();
   }
+  clearDisplay();
+  displayScores(p1score, p2score);
+  gameRound();
 }
 
 void gameRound() {
@@ -124,17 +127,12 @@ void gameRound() {
   digitalWrite(LED_R2_PIN, LOW);
   digitalWrite(LED_G1_PIN, LOW);
   digitalWrite(LED_G2_PIN, LOW);
-  clearDisplay();
-  // Qui bisognerà mettere i valori reali ogni round
-  displayScores(0,0);
 
   // Genera un tempo di attesa casuale tra 0 e MAX_WAIT millisecondi
   unsigned long waitTime = random(0, MAX_WAIT + 1);
   unsigned long startTime = millis();
 
-  while (millis() - startTime < waitTime) {
-    // Qui ci sarà il controllo dei bottoni?
-  }
+  delay(waitTime);
 
   // Numero random da indovinare
   int N = random(1, 4);
@@ -143,5 +141,30 @@ void gameRound() {
   displayMessage(buffer, 0, 0);
   Serial.print("Round avviato. Numero N estratto: ");
   Serial.println(N);
+
+  int p1clicks = 0;
+  int p2clicks = 0;
+  // finche' non indovino resto in gameRound(); se uno sbaglia esco
+  while(millis() - startTime < T1){
+    if(isButtonPressed(0)){ // p1 button
+      p1clicks++;
+      resetInput();
+    }
+    if(isButtonPressed(1)){ // p2 button
+      p2clicks++;
+      resetInput();
+    }
+    //check se qualcuno vince
+    if(p1clicks == N){
+      p1score++;
+      Serial.println("P1 vince!");
+      break;
+    }
+    if(p2clicks == N){
+      p2score++;
+      Serial.println("P2 vince!");
+      break;
+    }
+  }
 }
 

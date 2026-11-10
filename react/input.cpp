@@ -19,7 +19,7 @@ void buttonHandler1(){ buttonHandler(1); }
 
 void (*buttonHandlers[NUM_BUTTONS])() = { buttonHandler0, buttonHandler1 };
 
-void buttonHandler(int i){ 
+void buttonHandler(int i){
   long ts = millis();
   if (ts - lastButtonPressedTimestamps[i] > BOUNCING_TIME){
     lastButtonPressedTimestamps[i] = ts;

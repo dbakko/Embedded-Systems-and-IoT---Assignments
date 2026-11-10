@@ -30,7 +30,7 @@ void clearDisplay() {
   lcd.print(clear_string);
 }
 
-void displayMessage(const char *str, int col, int row) { // Go! 
+void displayMessage(const char *str, int col, int row) { // Go!
   lcd.setCursor(col, row);
   lcd.print(str);
 }
@@ -38,8 +38,8 @@ void displayMessage(const char *str, int col, int row) { // Go!
 void displayScores(int score1, int score2) { // Per i punteggi
   // Pulisci l'intera riga in basso prima di scrivere i nuovi punteggi 
   lcd.setCursor(0, 1);
-  lcd.print("                "); 
-  
+  lcd.print("                ");
+
   // Stampa il punteggio del Player 1 a sinistra
   lcd.setCursor(0, 1);
   lcd.print("P1:");

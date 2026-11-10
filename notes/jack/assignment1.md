@@ -23,6 +23,13 @@ L'ho utilizzata in core.cpp
 
 * Arduino supporta interrupt solo nei pin 2 e 3, ecco perchè colleghiamo i bottoni a questi pin (aspetta... attachInterrupt serve proprio a poter usare anche gli altri?)
 
+10/11/2026
+Sto facendo la parte iniziale del round dove devo controllare chi preme per primo i bottoni N volte: ho un dubbio: devo controllare anche se un giocatore preme più di N volte?
+Perchè se devo gestire anche questo cambia un po'... (il fatto è che se non lo gestisco basta spammare il bottone per vincere...)
+Dovrei fare una cosa del genere: se si entra nell'if con la condizione p1clicks == N, aspetto tipo 500ms (in modo non bloccante (non busy)) prima di dare il punteggio per assicurarmi che il giocatore non prema un'altra volta.
+
+* Dovremmo snellire core.cpp?
+
 ---
 
 ## Architettura
