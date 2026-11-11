@@ -44,7 +44,8 @@ void intro(){
   if (isButtonPressed(0) && isButtonPressed(1)){
     digitalWrite(LED_R1_PIN, LOW);
     digitalWrite(LED_R2_PIN, LOW);
-    resetInput();
+    resetInput(0);
+    
     changeState(SET_DIFFICULTY_STATE);
     return;
   }
@@ -132,6 +133,9 @@ void gameRound() {
   unsigned long waitTime = random(0, MAX_WAIT + 1);
   unsigned long startTime = millis();
 
+  Serial.print("Round avviato. Numero N estratto: ");
+  
+
   delay(waitTime);
 
   // Numero random da indovinare
@@ -139,20 +143,21 @@ void gameRound() {
   char buffer[16];
   sprintf(buffer, "       %d   ", N);
   displayMessage(buffer, 0, 0);
-  Serial.print("Round avviato. Numero N estratto: ");
   Serial.println(N);
+  
 
   int p1clicks = 0;
   int p2clicks = 0;
   // finche' non indovino resto in gameRound(); se uno sbaglia esco
+  resetInput();
   while(millis() - startTime < T1){
     if(isButtonPressed(0)){ // p1 button
       p1clicks++;
-      resetInput();
+      resetInput(0);
     }
     if(isButtonPressed(1)){ // p2 button
       p2clicks++;
-      resetInput();
+      resetInput(1);
     }
     //check se qualcuno vince
     if(p1clicks == N){
