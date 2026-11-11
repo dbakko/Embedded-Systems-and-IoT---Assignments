@@ -46,6 +46,11 @@ void resetInput(){
 }
 
 bool isButtonPressed(int buttonIndex){
+  #ifdef DEBUG
+    if(buttonPressed[buttonIndex]){
+     Serial.println("Bottone %d premuto", buttonIndex);
+    }
+  #endif
   return buttonPressed[buttonIndex];
 }
 

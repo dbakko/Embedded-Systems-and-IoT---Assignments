@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-//#define DEBUG
+#define DEBUG
 
 /* general state management procedure */
 
