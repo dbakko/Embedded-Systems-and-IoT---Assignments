@@ -4,7 +4,7 @@
 
 #include <EnableInterrupt.h>
 
-#define BOUNCING_TIME 80
+#define BOUNCING_TIME 100
 
 uint8_t inputPins[NUM_BUTTONS] = {BTN1_PIN, BTN2_PIN};
 bool buttonPressed[NUM_BUTTONS] = {false, false};
@@ -25,7 +25,7 @@ void buttonHandler(int i){
     lastButtonPressedTimestamps[i] = ts;
     int status = digitalRead(inputPins[i]);
     if (status == HIGH && !buttonPressed[i]) {
-        buttonPressed[i] = true;
+      buttonPressed[i] = true;
     }
   }
 }
@@ -40,25 +40,22 @@ void initInput(){
 void resetInput(){
   long ts = millis();
   for (int i = 0; i < NUM_BUTTONS; i++) {
-   buttonPressed[i] = false;
-   lastButtonPressedTimestamps[i] = ts;
+    buttonPressed[i] = false;
+    lastButtonPressedTimestamps[i] = ts;
   }
 }
 
 void resetInput(int index){
   long ts = millis();
-  //for (int i = 0; i < NUM_BUTTONS; i++) {
-   //buttonPressed[i] = false;}
-   buttonPressed[index] = false;
-   lastButtonPressedTimestamps[index] = ts;
-  
+  buttonPressed[index] = false;
+  lastButtonPressedTimestamps[index] = ts;
 }
 
 bool isButtonPressed(int buttonIndex){
   #ifdef DEBUG
     if(buttonPressed[buttonIndex]){
-     Serial.print("Bottone premuto:");
-     Serial.println(buttonIndex);
+      Serial.print("Bottone premuto:");
+      Serial.println(buttonIndex);
     }
   #endif
   return buttonPressed[buttonIndex];

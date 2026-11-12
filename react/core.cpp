@@ -8,12 +8,18 @@
 #include <avr/sleep.h>
 #include <avr/power.h>
 
-unsigned long initialTime = 0;
+unsigned long introEntryTime = 0;
 unsigned long difficultyEntryTime = 0;
+unsigned long roundEntryTime = 0;
+unsigned long roundRandomWaitTime = 0;
 int selectedDifficulty = 1;
-int MAX_WAIT = 5000;
 int p1score = 0;
 int p2score = 0;
+int p1clicks = 0;
+int p2clicks = 0;
+unsigned long p1winTime = 0;
+unsigned long p2winTime = 0;
+int randomNum = 0;
 
 void checkPotentiometer();
 
@@ -29,14 +35,14 @@ void initCore(){
 void intro(){
   if (isJustEnteredInState()){
     Serial.println("Intro...");
-    initialTime = millis();
+    introEntryTime = millis();
   }
 
   const char welcomeMessage[] = "  Welcome to the React! Game. Press Buttons to Start. ";
 
   displayScrollingMessage(welcomeMessage, millis());
   ledFade(LED_R1_PIN, LED_R2_PIN);
-  if (millis() - initialTime >= MAX_TIME_IN_INTRO_STATE){
+  if (millis() - introEntryTime >= MAX_TIME_IN_INTRO_STATE){
     changeState(DEEP_SLEEP_STATE);
     return;
   }
@@ -44,8 +50,8 @@ void intro(){
   if (isButtonPressed(0) && isButtonPressed(1)){
     digitalWrite(LED_R1_PIN, LOW);
     digitalWrite(LED_R2_PIN, LOW);
-    resetInput(0);
-    
+    resetInput();
+
     changeState(SET_DIFFICULTY_STATE);
     return;
   }
@@ -54,7 +60,6 @@ void intro(){
 void deepSleep(){
   if (isJustEnteredInState()) {
     Serial.println("Entro in Deep Sleep...");
-    delay(100);
     // Disattiva led e display
     digitalWrite(LED_R1_PIN, LOW);
     digitalWrite(LED_R2_PIN, LOW);
@@ -100,7 +105,7 @@ void setDifficulty(){
   displayMessage(buffer, 0, 1);
 
   // Dopo 5 secondi, la difficoltà viene confermata e parte la partita
-  if (millis() - difficultyEntryTime >= 10000) {
+  if (millis() - difficultyEntryTime >= MAX_TIME_IN_DIFFICULTY_SELECT_STATE) {
     Serial.print("Difficolta' confermata automaticamente: ");
     Serial.println(selectedDifficulty);
 
@@ -115,61 +120,76 @@ void game(){
     Serial.println("Siamo nello stato di gioco!");
     clearDisplay();
     displayMessage("      Go!      ",0,0);
+    displayScores(p1score, p2score);
     delay(1000);
   }
   clearDisplay();
-  displayScores(p1score, p2score);
-  gameRound();
+  changeState(ROUND_STATE);
 }
 
 void gameRound() {
-  // Spengo i led ed il display
-  digitalWrite(LED_R1_PIN, LOW);
-  digitalWrite(LED_R2_PIN, LOW);
-  digitalWrite(LED_G1_PIN, LOW);
-  digitalWrite(LED_G2_PIN, LOW);
-
-  // Genera un tempo di attesa casuale tra 0 e MAX_WAIT millisecondi
-  unsigned long waitTime = random(0, MAX_WAIT + 1);
-  unsigned long startTime = millis();
-
-  Serial.print("Round avviato. Numero N estratto: ");
-  
-
-  delay(waitTime);
-
   // Numero random da indovinare
-  int N = random(1, 4);
   char buffer[16];
-  sprintf(buffer, "       %d   ", N);
-  displayMessage(buffer, 0, 0);
-  Serial.println(N);
-  
+  if (isJustEnteredInState()) {
+    roundEntryTime = millis();
+    clearDisplay();
+    // Spengo i led
+    digitalWrite(LED_R1_PIN, LOW);
+    digitalWrite(LED_R2_PIN, LOW);
+    digitalWrite(LED_G1_PIN, LOW);
+    digitalWrite(LED_G2_PIN, LOW);
 
-  int p1clicks = 0;
-  int p2clicks = 0;
-  // finche' non indovino resto in gameRound(); se uno sbaglia esco
-  resetInput();
-  while(millis() - startTime < T1){
+    Serial.print("Round avviato. Numero random estratto: ");
+
+    // Genera un tempo di attesa casuale tra 0 e MAX_WAIT millisecondi
+    roundRandomWaitTime = random(0, MAX_TIME_WAIT_ROUND_STATE + 1);
+
+    // inizializza le variabili del round
+    randomNum = random(1, 4);
+    Serial.println(randomNum);
+    sprintf(buffer, "       %d   ", randomNum);
+    p1winTime = 0;
+    p2winTime = 0;
+    p1clicks = 0;
+    p2clicks = 0;
+  }
+  //aspetta roundRandomTime secondi
+  if(millis() - roundEntryTime < roundRandomWaitTime){
+    resetInput(); // se i giocatori cliccano prima che il numero venga mostrato non assegnare il click
+    return;
+  }
+  displayMessage(buffer, 0, 0); // mostra il numero estratto ai giocatori
+
+  if(millis() - (roundEntryTime + roundRandomWaitTime) < T1){
     if(isButtonPressed(0)){ // p1 button
       p1clicks++;
       resetInput(0);
+      if(p1clicks == randomNum && p1winTime == 0){
+        p1winTime = millis();
+      } else if(p1winTime > 0){
+        p1winTime = 0;
+      }
     }
     if(isButtonPressed(1)){ // p2 button
       p2clicks++;
       resetInput(1);
+      if(p2clicks == randomNum && p2winTime == 0){
+        p2winTime = millis();
+      } else if(p2winTime > 0){
+        p2winTime = 0;
+      }
     }
+  } else {
     //check se qualcuno vince
-    if(p1clicks == N){
+    if(p1winTime > 0 && (p2winTime == 0 || p1winTime < p2winTime)){
       p1score++;
       Serial.println("P1 vince!");
-      break;
-    }
-    if(p2clicks == N){
+      displayScores(p1score, p2score);
+    } else if(p2winTime > 0 && (p1winTime == 0 || p2winTime < p1winTime)){
       p2score++;
       Serial.println("P2 vince!");
-      break;
+      displayScores(p1score, p2score);
     }
+    changeState(GAME_STATE); // dovrei andare in un END_STATE veramente
   }
 }
-

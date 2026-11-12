@@ -22,10 +22,12 @@ void loop() {
     case SET_DIFFICULTY_STATE:
       setDifficulty();
       break;
+    case DEEP_SLEEP_STATE:
+      deepSleep();
     case GAME_STATE:
       game();
       break;
-    case DEEP_SLEEP_STATE:
-      deepSleep();
+    case ROUND_STATE:
+      gameRound();
   }
 }
