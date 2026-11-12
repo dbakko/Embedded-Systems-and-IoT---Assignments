@@ -216,7 +216,7 @@ Se mentre si sta eseguendo inc() arriva un altro interrupt questo viene ingorato
 
 Perche' `volatile` in count?
 Volatile serve a dire al compilatore di non fare ottimizzazioni. Quando si incrementa count devi andare sempre in memoria per leggere il suo valore.
-Infatti normalmente quando si esegue l'istruzione println(count) il compilatore, vedendo che non viene mai chiamato inc e quindi non viene mai aggiornato count (viene solo passato il puntatore a inc ad attach interrupt), potrebbe decidere di compilare il programma scrivendo count come una costante(cachandola in un registro della CPU).
+Infatti normalmente quando si esegue l'istruzione println(count) il compilatore, vedendo che non viene mai chiamato inc e quindi non viene mai aggiornato count (viene solo passato il puntatore a inc ad attach interrupt), potrebbe decidere di compilare il programma scrivendo count come una costante (cachandola in un registro della CPU).
 
 > [!WARNING]
 > Nel codice qui sopra ci sono dei problemi di race conditions.
@@ -260,6 +260,16 @@ void inc() {
 }
 ```
 
+## Timers
 
+Anche qui si usano gli interrupt.
+In pratica sono dei contatori che vengono incrementati e generano un interrupt quando al raggiungimento di un valore che decidi te.
+
+> [!WARNING]
+> Se disabiliti gli interrupt disabiliti anche i timer quindi!
+> Quindi delay non funziona (e' basata su timer)
+
+> [!NOTE]
+> Anche durante l'esecuzione di un interrupt handler gli interrupt sono ignorati quindi anche i timer non funzionano.
 
 
