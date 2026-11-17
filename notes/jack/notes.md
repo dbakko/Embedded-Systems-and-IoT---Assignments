@@ -260,16 +260,43 @@ void inc() {
 }
 ```
 
+## Button Bouncing
+
+Se il secondo click avviene troppo ravvicinatamente allora è probabilmente un bounce, lo ignoro.
+
+## Potenziometro
+
+Funziona variando la sua resistenza interna, da resistenza 0 (non si crea un acaduta di potenziale) a resistenza infinita (fa vedere GND).
+
+# Lezione 1 Ottobre
+
 ## Timers
 
 Anche qui si usano gli interrupt.
-In pratica sono dei contatori che vengono incrementati e generano un interrupt quando al raggiungimento di un valore che decidi te.
+In pratica sono dei contatori che vengono incrementati (un registro che viene incrementato) e generano un interrupt al raggiungimento di un valore che decidi te.
 
 > [!WARNING]
 > Se disabiliti gli interrupt disabiliti anche i timer quindi!
-> Quindi delay non funziona (e' basata su timer)
+> Quindi delay non funziona (e' basata su timer).
+> Per lo stesso motivo non funziona nemmeno la PWM.
+> Quindi se chiami una funzione come interrupt handler e questa dura tanto, i LED che prima fadavano ora sono statici...
 
 > [!NOTE]
 > Anche durante l'esecuzione di un interrupt handler gli interrupt sono ignorati quindi anche i timer non funzionano.
 
+Morale: gli interrupt handler devono essere BREVI!
 
+Arduino UNO ha 3 Timer. Un timer viene incrementato alla frequenza del clock della cpu e si puo' impostare un valore per cui ogni volta che conta quel valore, il timer genera un interrupt.
+
+Esempio:
+```c
+#include <TimerOne.h>
+
+void setup(){
+    pinMode(LED_PIN, OUTPUT);
+    Timer1.initialize(1000000); // set a timer of lenght 10^6 micro sec = 1 sec
+    Timer1.attachInterrupt(foo); // runs foo on each timer interrupt
+}
+```
+
+Il timer 1 è a 16 bit, invece i timer 0 e 2 sono a 8 bit.
