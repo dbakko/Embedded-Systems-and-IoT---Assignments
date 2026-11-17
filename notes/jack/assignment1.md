@@ -30,7 +30,9 @@ Dovrei fare una cosa del genere: se si entra nell'if con la condizione p1clicks 
 
 * Dovremmo snellire core.cpp?
 
-È buona pratica che loop() venga eseguita relativamente velocemente (perchè dopo avviene il poll per la Serial Line) e quindi decido di rimpiazzare il while dentro a gameRound con uno stato a se stante.
+* È buona pratica che loop() venga eseguita relativamente velocemente (perchè dopo avviene il poll per la Serial Line) e quindi decido di rimpiazzare il while dentro a gameRound con uno stato a se stante.
+
+* Creo un nuovo stato ROUND_RESULT in cui mostro i risultati del round
 
 ---
 

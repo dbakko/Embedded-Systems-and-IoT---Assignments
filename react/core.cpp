@@ -12,6 +12,7 @@ unsigned long introEntryTime = 0;
 unsigned long difficultyEntryTime = 0;
 unsigned long roundEntryTime = 0;
 unsigned long roundRandomWaitTime = 0;
+unsigned long roundResultEntryTime = 0;
 int selectedDifficulty = 1;
 int p1score = 0;
 int p2score = 0;
@@ -120,12 +121,10 @@ void game(){
     Serial.println("Siamo nello stato di gioco!");
     clearDisplay();
     displayMessage("      Go!      ",0,0);
-    displayScores(p1score, p2score);
     delay(1000);
   }
-  clearDisplay();
   changeState(ROUND_STATE);
-}
+} // forse ci conviene ancche qui definire un MAX_TIME_IN_GAME_STATE e togliere il delay...
 
 void gameRound() {
   // Numero random da indovinare
@@ -152,22 +151,26 @@ void gameRound() {
     p2winTime = 0;
     p1clicks = 0;
     p2clicks = 0;
+    displayScores(p1score, p2score);
   }
+
   //aspetta roundRandomTime secondi
   if(millis() - roundEntryTime < roundRandomWaitTime){
     resetInput(); // se i giocatori cliccano prima che il numero venga mostrato non assegnare il click
+    //TODO: bisogna mettere qui la logica di penalizzazione per i giocatori che cliccano prima che sia displayato il numero random
     return;
   }
   displayMessage(buffer, 0, 0); // mostra il numero estratto ai giocatori
 
+//TODO: ad ogni round fai decrementare T1 a seconda della difficoltà
   if(millis() - (roundEntryTime + roundRandomWaitTime) < T1){
     if(isButtonPressed(0)){ // p1 button
       p1clicks++;
       resetInput(0);
       if(p1clicks == randomNum && p1winTime == 0){
         p1winTime = millis();
-      } else if(p1winTime > 0){
-        p1winTime = 0;
+      } else if(p1winTime > 0){ // p1 ha cliccato troppe volte
+        p1winTime = 0; //per ora semplicemente metto il suo tempo di vittoria a 0 che significa che ha perso
       }
     }
     if(isButtonPressed(1)){ // p2 button
@@ -179,17 +182,36 @@ void gameRound() {
         p2winTime = 0;
       }
     }
-  } else {
+  } else { // game finito
+    changeState(ROUND_RESULT);
+  }
+}
+
+void roundResult(){
+  if(isJustEnteredInState()){
+    roundResultEntryTime = millis();
+    Serial.println("Entrato in round result state");
     //check se qualcuno vince
     if(p1winTime > 0 && (p2winTime == 0 || p1winTime < p2winTime)){
       p1score++;
       Serial.println("P1 vince!");
-      displayScores(p1score, p2score);
+      displayMessage("    P1 vince!    ",0,0);
+      digitalWrite(LED_G1_PIN, HIGH);
     } else if(p2winTime > 0 && (p1winTime == 0 || p2winTime < p1winTime)){
       p2score++;
       Serial.println("P2 vince!");
-      displayScores(p1score, p2score);
+      displayMessage("    P2 vince!    ",0,0);
+      digitalWrite(LED_G2_PIN, HIGH);
     }
-    changeState(GAME_STATE); // dovrei andare in un END_STATE veramente
+    // TODO: check se non ha vinto nessuno e se qualcuno ha cliccato un numero sbagliato di volte allora penalizza
+    // TODO: Check se e' finito il tempo e i giocatori non hanno risposto, in quel caso dovresti andare in un END_STATE
+    displayScores(p1score, p2score);
+  }
+  
+  if (millis() - roundResultEntryTime >= MAX_TIME_IN_RESULT_STATE){
+    digitalWrite(LED_G1_PIN, LOW);
+    digitalWrite(LED_G2_PIN, LOW);
+    changeState(GAME_STATE);
   }
 }
+

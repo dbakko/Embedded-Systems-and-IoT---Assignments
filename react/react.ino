@@ -24,10 +24,15 @@ void loop() {
       break;
     case DEEP_SLEEP_STATE:
       deepSleep();
+      break;
     case GAME_STATE:
       game();
       break;
     case ROUND_STATE:
       gameRound();
+      break;
+    case ROUND_RESULT:
+      roundResult();
+      break;
   }
 }
