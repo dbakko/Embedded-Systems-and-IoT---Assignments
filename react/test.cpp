@@ -12,3 +12,6 @@
     resetInput();
   }
 */
+
+// Farei che si crea uno stato dedicato che testa ogni componente hw, magari da
+// usare negli assignment successivi

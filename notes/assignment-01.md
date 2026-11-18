@@ -50,7 +50,9 @@ The game board includes two green leds (L1, L3), two red leds (L2, L4), two tact
 **DANI**
 
 
-- At the end of each round (but in case of game over), while the green or red leds are turned on, players' score is displayed on the LCD (e.g with one score aligned left and one aligned right).
+- At the end of each round (but in case of game over), while the green or red leds are turned on, players' score is displayed on the LCD (e.g with one score aligned left and one aligned right). 
+
+*Rivedi come viene visualizzato il punteggio, mettilo nel roundresult_state*
 
 **DANI**
 

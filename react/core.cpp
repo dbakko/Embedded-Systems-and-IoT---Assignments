@@ -158,6 +158,7 @@ void gameRound() {
   if(millis() - roundEntryTime < roundRandomWaitTime){
     resetInput(); // se i giocatori cliccano prima che il numero venga mostrato non assegnare il click
     //TODO: bisogna mettere qui la logica di penalizzazione per i giocatori che cliccano prima che sia displayato il numero random
+    // Fare in modo che penalizzi solo il giocatore che si sbaglia per primo
     return;
   }
   displayMessage(buffer, 0, 0); // mostra il numero estratto ai giocatori
