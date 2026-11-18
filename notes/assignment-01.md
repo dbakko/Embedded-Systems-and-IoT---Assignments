@@ -43,6 +43,7 @@ The game board includes two green leds (L1, L3), two red leds (L2, L4), two tact
   - If a player presses the button too early (before the number N is displayed) or a wrong number of times, then her/his red led (L2 for player #1, L3 for player #2) is turned on for 2 seconds and her/his score is decremented by one. 
 
 **DANI**
+**FATTO**
 
 
   - If no players press their button within T1 seconds, then the game ends. If there is a winner (no tie), a message `Game Over - The winner is XX` (where `XX` is either 'P1' or 'P2') is displayed on the LCD (string animated, rotating) for 10 seconds, then the game restarts from the initial state. In the case of tie, the message `Game Over - Tie` is displayed instead.
@@ -52,9 +53,8 @@ The game board includes two green leds (L1, L3), two red leds (L2, L4), two tact
 
 - At the end of each round (but in case of game over), while the green or red leds are turned on, players' score is displayed on the LCD (e.g with one score aligned left and one aligned right). 
 
-*Rivedi come viene visualizzato il punteggio, mettilo nel roundresult_state*
-
 **DANI**
+**FATTO**
 
 - Every new round the time T1 is reduced of some factor F (parameter of the program), that depends on a difficulty level L chosen players before starting the game, using the Pot device. In particular, the level L could be a value in the range 1..4 (1 easiest, 4 most difficult). The level affects the value of the factor F (so that the more difficult the game is, the greater the factor F must be). 
 

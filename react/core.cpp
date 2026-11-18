@@ -23,6 +23,10 @@ int p2clicks = 0;
 unsigned long p1winTime = 0;
 unsigned long p2winTime = 0;
 int randomNum = 0;
+bool p1Penalized = false;
+bool p2Penalized = false;
+bool roundErrorOccurred = false;
+
 
 void checkPotentiometer();
 
@@ -134,6 +138,7 @@ void gameRound() {
   if (isJustEnteredInState()) {
     roundEntryTime = millis();
     clearDisplay();
+    resetInput();
     // Spengo i led
     digitalWrite(LED_R1_PIN, LOW);
     digitalWrite(LED_R2_PIN, LOW);
@@ -153,14 +158,31 @@ void gameRound() {
     p2winTime = 0;
     p1clicks = 0;
     p2clicks = 0;
-    displayScores(p1score, p2score);
+    p1Penalized = false;
+    p2Penalized = false;
+    roundErrorOccurred = false;
   }
 
-  //aspetta roundRandomTime secondi
+  // Penalizzazione per pressione anticipata
   if(millis() - roundEntryTime < roundRandomWaitTime){
-    resetInput(); // se i giocatori cliccano prima che il numero venga mostrato non assegnare il click
-    //TODO: bisogna mettere qui la logica di penalizzazione per i giocatori che cliccano prima che sia displayato il numero random
-    // Fare in modo che penalizzi solo il giocatore che si sbaglia per primo
+    if (!roundErrorOccurred) {
+      if(isButtonPressed(0)) {
+        p1Penalized = true;
+        roundErrorOccurred = true;
+        p1score--;
+        Serial.println("P1 ha premuto troppo presto!");
+        changeState(ROUND_RESULT);
+        return;
+      }
+      if(isButtonPressed(1)) {
+        p2Penalized = true;
+        roundErrorOccurred = true;
+        p2score--;
+        Serial.println("P2 ha premuto troppo presto!");
+        changeState(ROUND_RESULT);
+        return;
+      }
+    }
     return;
   }
   displayMessage(buffer, 0, 0); // mostra il numero estratto ai giocatori
@@ -170,45 +192,88 @@ void gameRound() {
     if(isButtonPressed(0)){ // p1 button
       p1clicks++;
       resetInput(0);
+      
+      // P1 Penalità per aver premuto più volte
+      if(p1clicks > randomNum && !roundErrorOccurred) {
+        p1Penalized = true;
+        roundErrorOccurred = true;
+        p1score--;
+        Serial.println("P1 ha cliccato troppe volte!");
+        resetInput();
+        changeState(ROUND_RESULT);
+        return;
+      }
+
       if(p1clicks == randomNum && p1winTime == 0){
         p1winTime = millis();
-      } else if(p1winTime > 0){ // p1 ha cliccato troppe volte
+      } /*else if(p1winTime > 0){ // p1 ha cliccato troppe volte
         p1winTime = 0; //per ora semplicemente metto il suo tempo di vittoria a 0 che significa che ha perso
-      }
+        }*/
     }
     if(isButtonPressed(1)){ // p2 button
       p2clicks++;
       resetInput(1);
-      if(p2clicks == randomNum && p2winTime == 0){
-        p2winTime = millis();
-      } else if(p2winTime > 0){
-        p2winTime = 0;
+
+    // P2 Penalità per aver premuto più volte 
+    if(p2clicks > randomNum && !roundErrorOccurred) {
+      p2Penalized = true;
+      roundErrorOccurred = true;
+      p2score--;
+      Serial.println("P2 ha cliccato troppe volte!");
+      resetInput();
+      changeState(ROUND_RESULT);
+      return;
       }
+      
+    if(p2clicks == randomNum && p2winTime == 0){
+      p2winTime = millis();
+      } /*else if(p2winTime > 0){
+        p2winTime = 0;
+      }*/
     }
+
   } else { // game finito
     changeState(ROUND_RESULT);
   }
+
 }
 
 void roundResult(){
   if(isJustEnteredInState()){
     roundResultEntryTime = millis();
     Serial.println("Entrato in round result state");
-    //check se qualcuno vince
-    if(p1winTime > 0 && (p2winTime == 0 || p1winTime < p2winTime)){
+    displayScores(p1score, p2score);
+    
+    // Check se qualcuno perde
+    if(p1Penalized){
+      Serial.println("P1 penalizzato!");
+      displayMessage("P1 penalty!", 0, 0);
+      digitalWrite(LED_R1_PIN, HIGH); // Accende il LED rosso di P1 (L2)
+    } 
+    else if(p2Penalized){
+      Serial.println("P2 penalizzato!");
+      displayMessage("P2 penalty!", 0, 0);
+      digitalWrite(LED_R2_PIN, HIGH); // Accende il LED rosso di P2 (L3)
+    }
+    // Check se qualcuno vince
+    else if(p1winTime > 0 && (p2winTime == 0 || p1winTime < p2winTime)){
       p1score++;
       Serial.println("P1 vince!");
-      displayMessage("    P1 vince!    ",0,0);
+      displayMessage("    P1 wins!    ",0,0);
       digitalWrite(LED_G1_PIN, HIGH);
-    } else if(p2winTime > 0 && (p1winTime == 0 || p2winTime < p1winTime)){
+    } 
+    else if(p2winTime > 0 && (p1winTime == 0 || p2winTime < p1winTime)){
       p2score++;
       Serial.println("P2 vince!");
-      displayMessage("    P2 vince!    ",0,0);
+      displayMessage("    P2 wins!    ",0,0);
       digitalWrite(LED_G2_PIN, HIGH);
     }
-    // TODO: check se non ha vinto nessuno e se qualcuno ha cliccato un numero sbagliato di volte allora penalizza
-    // TODO: Check se e' finito il tempo e i giocatori non hanno risposto, in quel caso dovresti andare in un END_STATE
+    else { 
+      displayMessage("  Time's up!   ", 0, 0);
+    }
+    
     displayScores(p1score, p2score);
+    //changeState(END_STATE); //da fare per il game over
   }
   
   if (millis() - roundResultEntryTime >= MAX_TIME_IN_RESULT_STATE){
@@ -219,7 +284,10 @@ void roundResult(){
     Serial.println(String("Round Time: ") + roundTime);
     digitalWrite(LED_G1_PIN, LOW);
     digitalWrite(LED_G2_PIN, LOW);
-    changeState(GAME_STATE);
+    digitalWrite(LED_R1_PIN, LOW);
+    digitalWrite(LED_R2_PIN, LOW);
+    changeState(ROUND_STATE);
   }
 }
+
 
