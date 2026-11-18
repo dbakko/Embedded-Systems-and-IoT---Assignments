@@ -14,6 +14,8 @@ unsigned long roundEntryTime = 0;
 unsigned long roundRandomWaitTime = 0;
 unsigned long roundResultEntryTime = 0;
 int selectedDifficulty = 1;
+int roundTime = T1;
+int roundTimeDecreaseFactor = BASE_DECREASE_FACTOR;
 int p1score = 0;
 int p2score = 0;
 int p1clicks = 0;
@@ -164,7 +166,7 @@ void gameRound() {
   displayMessage(buffer, 0, 0); // mostra il numero estratto ai giocatori
 
 //TODO: ad ogni round fai decrementare T1 a seconda della difficoltà
-  if(millis() - (roundEntryTime + roundRandomWaitTime) < T1){
+  if(millis() - (roundEntryTime + roundRandomWaitTime) < roundTime){
     if(isButtonPressed(0)){ // p1 button
       p1clicks++;
       resetInput(0);
@@ -210,6 +212,9 @@ void roundResult(){
   }
   
   if (millis() - roundResultEntryTime >= MAX_TIME_IN_RESULT_STATE){
+    // aggiorna roundTime
+    roundTime = roundTime - roundTimeDecreaseFactor * selectedDifficulty;
+    Serial.println(String("Round Time: ") + roundTime);
     digitalWrite(LED_G1_PIN, LOW);
     digitalWrite(LED_G2_PIN, LOW);
     changeState(GAME_STATE);
