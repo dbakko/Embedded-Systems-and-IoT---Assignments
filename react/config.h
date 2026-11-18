@@ -24,7 +24,7 @@
 #define T1 5000
 #define TMIN 2000
 
-#define BASE_DECREASE_FACTOR 100
+#define BASE_DECREASE_FACTOR 120
 
 #define POT_PIN A0
 

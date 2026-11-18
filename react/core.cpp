@@ -213,7 +213,9 @@ void roundResult(){
   
   if (millis() - roundResultEntryTime >= MAX_TIME_IN_RESULT_STATE){
     // aggiorna roundTime
-    roundTime = roundTime - roundTimeDecreaseFactor * selectedDifficulty;
+    if(roundTime > TMIN){ // TMIN e' il cap minimo al tempo del round
+      roundTime = roundTime - roundTimeDecreaseFactor * selectedDifficulty;
+    }
     Serial.println(String("Round Time: ") + roundTime);
     digitalWrite(LED_G1_PIN, LOW);
     digitalWrite(LED_G2_PIN, LOW);
