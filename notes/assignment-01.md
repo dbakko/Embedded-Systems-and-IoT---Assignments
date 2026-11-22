@@ -49,7 +49,7 @@ The game board includes two green leds (L1, L3), two red leds (L2, L4), two tact
   - If no players press their button within T1 seconds, then the game ends. If there is a winner (no tie), a message `Game Over - The winner is XX` (where `XX` is either 'P1' or 'P2') is displayed on the LCD (string animated, rotating) for 10 seconds, then the game restarts from the initial state. In the case of tie, the message `Game Over - Tie` is displayed instead.
 
 **DANI**
-
+**FATTO**
 
 - At the end of each round (but in case of game over), while the green or red leds are turned on, players' score is displayed on the LCD (e.g with one score aligned left and one aligned right). 
 

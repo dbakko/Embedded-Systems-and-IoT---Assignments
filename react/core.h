@@ -8,6 +8,8 @@
 #define GAME_STATE 4
 #define ROUND_STATE 5
 #define ROUND_RESULT 6
+#define END_STATE 7
+
 
 /* core business logic */
 
@@ -18,5 +20,6 @@ void setDifficulty();
 void deepSleep();
 void gameRound();
 void roundResult();
+void endGame();
 
 #endif

@@ -34,5 +34,8 @@ void loop() {
     case ROUND_RESULT:
       roundResult();
       break;
+    case END_STATE:
+      endGame();
+      break;
   }
 }

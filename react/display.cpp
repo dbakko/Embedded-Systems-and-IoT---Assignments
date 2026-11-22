@@ -45,7 +45,7 @@ void displayScores(int score1, int score2) { // Per i punteggi
   lcd.print("P1:");
   lcd.print(score1);
 
-  // Stampa il punteggio del Player 2 a destra (allineato verso la fine della riga)
+  // Stampa il punteggio del Player 2 a destra 
   lcd.setCursor(10, 1);
   lcd.print("P2:");
   lcd.print(score2);
