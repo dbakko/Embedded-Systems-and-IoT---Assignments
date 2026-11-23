@@ -30,9 +30,6 @@ unsigned long goEntryTime = 0;
 unsigned long endStateEntryTime = 0;
 
 
-
-void checkPotentiometer();
-
 void ledFade(int led1, int led2);
 void deepSleep();
 void setDifficulty();
@@ -146,7 +143,7 @@ void game(){
 
 void gameRound() {
   // Numero random da indovinare
-  char buffer[16];
+  static char buffer[16];
   if (isJustEnteredInState()) {
     roundEntryTime = millis();
     clearDisplay();
@@ -253,7 +250,6 @@ void roundResult(){
   if(isJustEnteredInState()){
     roundResultEntryTime = millis();
     Serial.println("Entrato in round result state");
-    displayScores(p1score, p2score);
     
     // Check se qualcuno perde
     if(p1Penalized){
@@ -280,6 +276,11 @@ void roundResult(){
       digitalWrite(LED_G2_PIN, HIGH);
     }
     else { 
+      /*
+       Questo è il caso in cui i giocatori hanno sì premuto il pulsante, ma un numero diu volte non abbastanza
+       per essere giusto, non troppo per essere sbagliato. è una sorta di "tie" del round, dove a nessuno viene
+       assegnato un punto. Ciò non è specificato nel testo dell'esercizio ma è un caso che può capitare.
+      */
       displayMessage("  Time's up!   ", 0, 0);
     }
     
@@ -301,7 +302,7 @@ void roundResult(){
 }
 
 void endGame() {
-  char gameOverMessage[48];
+  static char gameOverMessage[48];
   if (isJustEnteredInState()) {
     endStateEntryTime = millis();
     clearDisplay();
@@ -317,7 +318,7 @@ void endGame() {
     } else {
       sprintf(gameOverMessage, "  Game Over - Tie  ");
     }
-    Serial.println(gameOverMessage);
+    Serial.println("La partita e' finita!");
   }
 
   displayScrollingMessage(gameOverMessage, millis());

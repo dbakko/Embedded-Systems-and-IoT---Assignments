@@ -12,7 +12,7 @@ void initOutput(){
   pinMode(LED_G2_PIN, OUTPUT);
 }
 
-void ledFade(int led1, int led2){ //funzione accessoria, da mettere in un nuovo file/file diverso o teniamo qui?
+void ledFade(int led1, int led2){ 
   analogWrite(led1, brightness);
   analogWrite(led2, 255 - brightness);
   brightness = brightness + fadeAmount;
@@ -21,9 +21,4 @@ void ledFade(int led1, int led2){ //funzione accessoria, da mettere in un nuovo 
   }
   delay(30);
 
-}
-
-void toggleLed(uint8_t pin){ //dovrei avere toggleLed oppure due funzioni (una per accendere e un altra per spegnere)?
-  //TODO:
-  digitalWrite(pin, HIGH);
 }

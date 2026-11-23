@@ -30,7 +30,7 @@ void clearDisplay() {
   lcd.print(clear_string);
 }
 
-void displayMessage(const char *str, int col, int row) { // Go!
+void displayMessage(const char *str, int col, int row) {
   lcd.setCursor(col, row);
   lcd.print(str);
 }
