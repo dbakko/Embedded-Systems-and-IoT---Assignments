@@ -277,7 +277,7 @@ void roundResult(){
     }
     else { 
       /*
-       Questo è il caso in cui i giocatori hanno sì premuto il pulsante, ma un numero diu volte non abbastanza
+       Questo è il caso in cui i giocatori hanno sì premuto il pulsante, ma un numero di volte non abbastanza
        per essere giusto, non troppo per essere sbagliato. è una sorta di "tie" del round, dove a nessuno viene
        assegnato un punto. Ciò non è specificato nel testo dell'esercizio ma è un caso che può capitare.
       */
@@ -290,7 +290,8 @@ void roundResult(){
   if (millis() - roundResultEntryTime >= MAX_TIME_IN_RESULT_STATE){
     // aggiorna roundTime
     if(roundTime > TMIN){ // TMIN e' il cap minimo al tempo del round
-      roundTime = roundTime - roundTimeDecreaseFactor * selectedDifficulty;
+      int F = roundTimeDecreaseFactor * selectedDifficulty; // Factor F per diminuire il tempo in base alla difficoltà
+      roundTime = roundTime - F; // T1 = T1 - F
     }
     Serial.println(String("Round Time: ") + roundTime);
     digitalWrite(LED_G1_PIN, LOW);
