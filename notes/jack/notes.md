@@ -286,11 +286,22 @@ In pratica sono dei contatori che vengono incrementati (un registro che viene in
 
 Morale: gli interrupt handler devono essere BREVI!
 
-Arduino UNO ha 3 Timer. Un timer viene incrementato alla frequenza del clock della cpu e si puo' impostare un valore per cui ogni volta che conta quel valore, il timer genera un interrupt.
+Arduino UNO ha 3 Timer. Un timer viene incrementato alla frequenza del clock della cpu (quindi 1 volta ogni 63 nanosec!) e si puo' impostare un valore per cui ogni volta che conta quel valore, il timer genera un interrupt.
+C'e' un registro (uno per ogni timer) della MCU chiamato `Compare Match Register` che puoi settare ad un numero che quando sara' raggiunto da un timer poi verra' generato un interrupt.
+
+> [!NOTE]
+> A questa velocita' di aggiornamento ci vogliono solo 16 microsec per overfloware (e ricominciare da 0 quindi) i timer a 8 bit
+> Per il timer a 16 bit ci vuole 4.1ms
+
+Ma allora come fai a settare un tempo di 1 secondo da usare con il timer??
+Viene usato un altro numero `prescaler` che serve a ridurre la frequenza di aggiornamento dei timer: non si aggiornano piu' una volta ogni tick ma una volta ogni _prescaler_ tick.
+Il prescaler puo' essere 1, 8, 64, 256, 1024.
+Quindi settando il prescaler a 1024 non si aggiorna piu' il clock a 16MHz ma a 16kHz che fa una bella differenza...
+BTW: tutta sta roba e' nascosta dietro le funzioni di libreria.
 
 Esempio:
 ```c
-#include <TimerOne.h>
+#include <TimerOne.h> // c'e' una libreria per ogni timer
 
 void setup(){
     pinMode(LED_PIN, OUTPUT);
@@ -300,3 +311,110 @@ void setup(){
 ```
 
 Il timer 1 è a 16 bit, invece i timer 0 e 2 sono a 8 bit.
+
+### Watch Dog Timer
+
+E' un timer speciale di sicurezza.
+Devi fare, ad ogni ciclo di superloop, una operazione in un certo periodo ti tempo.
+Se questo timer scade prima che l'operazione sia stata completata allora viene resettato l'arduino perche' qualcosa potrebbe essere andato storto durante l'esecuzione.
+Per mostrare al timer che l'operazione e' completata setti un flag a true quando l'hai fatta (e poi lo risetti a false).
+
+Puo' essere utile per resettare il sistema quando ad esempio va in deadlock...
+> [!WARNING]
+> C'e' da stare attenti perche' magari potrebbe azionarsi il timer anche se in realta' non e' in deadlock e sta andando tutto normalmente..
+> E' da settare responsabilmente!
+
+BTW: non lo useremo, pero' sappiamo che esiste.
+
+### PWM e Timers
+
+PWM funziona coi Timers!
+L'onda va da HIGH a LOW ogni volta che viene generato un interrupt da un timer.
+
+> [!NOTE]
+> AnanlogWrite() infatti setta un timer che e' usato per generare interrupt che settano i pin specificati a HIGH e LOW
+> BTW: timer0 e' per i pin 5 e 6; timer1 per 9 e 10; timer 2 per 11 e 3
+> > [!WARNING]
+> > Questo vuol dire che se usi PWM in un dato pin poi non puoi usare il timer rispettivo per altre cose!
+> > Potrebbe accadere anche quando non te ne accorgi, ad esempio librerie che guidano il servo motor usano al loro interno analogWrite() e quindi anche un timer.
+
+---
+
+## Buses and Protocols
+
+Spesso accade che ho dei sensori troppo complessi da governare tramite semplici pin... ho bisogno di parlargli attraverso un protocollo seriale.
+
+> [!NOTE]
+> In un protocollo `SERIALE`, il canale dati e' attraversato da una fila di bit (una serie!).
+> Se ci fosse un protocollo parallelo allora avremmo piu canali dati usati contemporaneamente, in questo modo sarebbe possibile anche mandare un byte a botta (con 8 canali paralleli).
+> Nel caso del seriale se voglio mandare un byte devo mandare 8 bit, uno alla volta.
+
+> [!NOTE]
+> E' un protocollo `ASINCRONO`: ?
+
+![](./serialhardware.png)
+
+Per comunicare abbiamo bisogno di un protocollo che stabilisca:
+* baud rate: i bits per secondo (serve per mettersi d'accordo per campionare alla stessa frequenza i bit HIGH e LOW)
+* data frame: quanti bit ci si manda alla volta? (Quanto e' lungo il pacchetto, l'unita' dati).
+* synchronous bits: servono per sincronizzare l'inizio e la fine del data frame.
+* parity bit: servono per rilevazione errori (il noise dei cavi o altro potrebbe generarne).
+
+Ci sono dei baud rate specifici per arduino, piu' alto e' piu' veloce' e' la comunicazione (c'e' un limite tecnologico per arduino).
+
+> [!IMPORTANT]
+> Nel serial protocol di arduino abbiamo solo un bit di start, 8 bit di dati e 1 bit di stop;
+> quindi mandi un byte di dati ogni data frame, e usi 2 bit aggiuntivi per la sincronia.
+> Infatti si chiama `8N1`: 8 data bits, No parity, 1 start & 1 stop bit.
+
+`UART` e' il componente hardware dentro arduino che si occupa trasmettere e ricevere segnali nella linea Seriale.
+BTW: e' possibile comunicare in full duplex, puoi ricevere e mandare allo stesso tempo
+
+### I2C
+
+E' un altro protocollo di comunicazione seriale.
+E' `sincrono`! Ecco perche' ha bisogno di 2 cavi, uno per i dati e l'altro per trasmettere il segnale di clock.
+Quindi non si ha bisogno di concordare un baud rate.
+
+E' un protocollo master-slave: il microcontrollore (master) deve iniziare la comunicazione, manda un comando al sensore/actuator (slave) che risponde agli ordini.
+
+Al bus I2C puoi attaccarci fino a 128 dispositivi (che condividono tutti lo stesso bus)...
+> [!NOTE]
+> ma quindi se scrivo un dato nel bus I2C e lo leggono tutti, come fa il dispositivo a cui voglio parlare a capire che i bit sono rivolti a lui e a nessun altro?
+> Viene dato ad ogni dispositivo che si collega un ID a 8bit (ecco perche' il limite di 128)!
+> > [!WARNING]
+> > L'ID e' assegnato a livello hardware dal dispositivo stesso!!
+> > Quinid se vuoi usare 2 LCD I2C devono avere due ID diversi! Lo puoi cambiare facendo modifiche all'hardware...
+
+Un dispositivio I2C ti deve dire qual'e' il suo ID e quale funzioni offre.
+Ci sarebbe un livello di astrazione ancora sotto a quello della libreria per controllare l'LCD usando la libreria Wire.h.
+
+### SPI
+
+Ancora un altro protocollo.
+Questo e' uguale a I2C ma ha 2 data line invece che 1, una per mandare e l'altra per ricevere dati.
+Ha performance leggermente superiori.
+Pero' per selezionare il dispositivo bisogna avere un cavo connesso proprio al dispositivo con cui si vuole parlare e attivarlo per segnalare che lo hai selezionato.
+Quindi serve un cavo per ogni dispositivo slave che attacchi (cavo `slave select`).
+Si puo' ovviare a questo problema facendo daisy chaining ma e' comunque una complessita' in piu' rispetto a I2C.
+Comunque Arduino Uno supporta anche questo protocollo e fornisce 4 pin (in multiplexing) per usarlo.
+
+---
+
+## Power Management
+
+Arduino da la possibilita' di cambiare la modalita' del suo microcontrollore in modo da consumare di meno.
+Queste sono le modalita' `sleep`.
+Ci sono 5 livelli di sleep:
+
+* `Idle`: solo la MCU dorme, i sensori (pin), timer (in generale gli interrupt) rimangono attivi, pronti a svegliare la MCU.
+* `Power-down mode`: MCU off, timers off, e' reattivo solo agli interrupt provenienti dai pin.
+    In questo caso puoi risvegliare la MCU solo facendo un interrupt (qualsiasi) sui pin 2 o 3.
+
+Ogni modalita' ha pro (risparmi piu' energia) e contro (disabiliti piu' cose).
+Scegline una a seconda di cosa hai bisogno...
+
+> [!NOTE]
+> Se normalmente arduino usa milliAmpere in power down consuma microAmpere, un bel risparmio!
+
+

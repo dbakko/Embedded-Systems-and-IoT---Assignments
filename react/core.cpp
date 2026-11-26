@@ -70,7 +70,7 @@ void deepSleep(){
     // Disattiva led e display
     digitalWrite(LED_R1_PIN, LOW);
     digitalWrite(LED_R2_PIN, LOW);
-    turnOffDisplay();
+    turnOffDisplay(); // TODO: guarda se si spegne anche senza fare niente, solo entrando in sleep mode
 
     // Entra nello stato di sleep, addormenta la CPU
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
