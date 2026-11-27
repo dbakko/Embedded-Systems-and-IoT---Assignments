@@ -12,7 +12,8 @@ Serial.begin(9600); //baud rate (servono per sincronizzare i bit sul canale)
 
 You can pass flash-memory based strings to Serial.print() by wrapping them with F(). For example:
 ```cpp
-Serial.print(F("Hello World"))
+Serial.print(F("Hello World")) // cosi viene scritta nella EEPROM (invece che nella SRAM)
+                               // molto utile perche' la SRAM e' molto piccola e limitata, conviene usare anche l'EEPROM
 ```
 
 > [!NOTE]

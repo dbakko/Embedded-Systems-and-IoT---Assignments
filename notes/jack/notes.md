@@ -165,7 +165,7 @@ In generale cio' funziona bene se la routine da eseguire e' abbastanza veloce.
 
 In arduino non avendo OS e quindi nessuna interrupt table possiamo specificare noi cosa fare quando avviene un interrupt, quindi [programmando un nostro interrupt handler].
 
-I pin di input 2 e 3 possono essere configurati per gestire interrupt (in realta' con la libreria EnableInterrupt puoi usare anche altri pin).
+I pin di input 2 e 3 possono essere configurati per gestire interrupt (in realta' con la libreria EnableInterrupt puoi usare anche altri pin (con limitazioni)).
 Puoi dire ai pin di generare un interrupt quando c'e' un cambiamento del segnale (RISING, FALLING o CHANGE) e quando il segnale e' LOW.
 
 Alcuni interrupt sono gia' definiti, ad esempio quando clicchi il reset button.
@@ -353,6 +353,7 @@ Spesso accade che ho dei sensori troppo complessi da governare tramite semplici 
 > E' un protocollo `ASINCRONO`: ?
 
 ![](./serialhardware.png)
+(Nota che rx e tx sono i led builtin 0 e 1...)
 
 Per comunicare abbiamo bisogno di un protocollo che stabilisca:
 * baud rate: i bits per secondo (serve per mettersi d'accordo per campionare alla stessa frequenza i bit HIGH e LOW)
@@ -369,6 +370,26 @@ Ci sono dei baud rate specifici per arduino, piu' alto e' piu' veloce' e' la com
 
 `UART` e' il componente hardware dentro arduino che si occupa trasmettere e ricevere segnali nella linea Seriale.
 BTW: e' possibile comunicare in full duplex, puoi ricevere e mandare allo stesso tempo
+
+#### Esempio Echo
+
+```cpp
+void setup(){
+    Serial.begin(9600);
+}
+
+void loop(){
+    if(Serial.available()){
+        char data = Serial.read();
+        Serial.print(data);
+    }
+}
+```
+Dal serial monitor puoi mandare dell'input all'arduino, con questo programma fa l'echo di quello che scrivi.
+Il buffer che legge Serial.read e' 64 byte (e' piccolo e quindi se scrivi velocemente e leggi lentamente potresti perdere dei dati).
+
+> [!NOTE]
+> BTW, i led builtin 0 e 1 si accendono quando si manda e si riceve dalla serial line.
 
 ### I2C
 
@@ -388,6 +409,38 @@ Al bus I2C puoi attaccarci fino a 128 dispositivi (che condividono tutti lo stes
 
 Un dispositivio I2C ti deve dire qual'e' il suo ID e quale funzioni offre.
 Ci sarebbe un livello di astrazione ancora sotto a quello della libreria per controllare l'LCD usando la libreria Wire.h.
+
+#### Esempio
+Comunicare con un nuovo dispositivo I2C:
+
+```cpp
+void loop(){
+    byte error, address;
+    int nDevices = 0;
+
+    Serial.println("Scanning...");
+    for(address = 1; address < 127; address++){ // quindi scannerizzo tutti i possibili indirizzi e inizio una trasmisisone e stampo se ne trovo uno
+        Wire.beginTransmission(address);
+        error = Wire.endTransmission();
+
+        if(error == 0){
+            Serial.println("I2C device found at address 0x");
+            if(address < 16) Serial.print("0");
+            Serial.println(address, HEX);
+        }
+    }
+}
+```
+
+#### Esempio
+LiquidCrystal_I2C
+
+```cpp
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, 20, 4); // 0x27 = 39 e' l'id del display (e' hard codede hardware coded)
+                                                        // 20 e' il numero di colonne e 4 il numero di righe
+```
 
 ### SPI
 
@@ -417,4 +470,11 @@ Scegline una a seconda di cosa hai bisogno...
 > [!NOTE]
 > Se normalmente arduino usa milliAmpere in power down consuma microAmpere, un bel risparmio!
 
+#### Esempio
 
+Voglio mettere arduino in idle mode.
+Ho un timer che triggera un interrupt ogni 5 secondi. Quindi ogni 5 secondi l'arduino si risveglia.
+
+---
+
+# Lezione 15 Ottobre
