@@ -478,3 +478,19 @@ Ho un timer che triggera un interrupt ogni 5 secondi. Quindi ogni 5 secondi l'ar
 ---
 
 # Lezione 15 Ottobre
+
+Questa in teoria ci serve per il secondo progetto.
+
+## Sensors & Actuators
+
+Sono `trasduttori`: dispositivo che converte un segnale o una grandezza fisica (come temperatura, pressione o suono) da una forma energetica a un'altra, spesso in un segnale elettrico misurabile.
+* Sensore: trasduttore che misura una quantità fisica (temperatura, umidità, radiazioni, ...) o rileva o quantifica concentrazioni chimiche (tipo di gas).
+    Possono essere analogici (e anche digitali), in questo caso il microcontrollore deve avere un analog-digital-converter (ADC).
+    Se sono digitali possono essere boolenai (restituiscono HIGH quando la quantita' fisica supera una certa soglia altrimenti LOW) o codificano l'output con una stringa di bits.
+* Actuator (Attuatore?): Dispositivo che produce un effetto sull'ambiente.
+    Possono essere analogici e digitali.
+
+Come si fa a creare trsduttori? Di solito sfrutti delle proprieta' di qualche materiale.
+Nel caso di un termometro si possono usare termoresistori che cambiano la propria resistività (e quindi anche resistenza -> voltaggio) a seconda della temperatura).
+
+
