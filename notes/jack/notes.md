@@ -493,4 +493,71 @@ Sono `trasduttori`: dispositivo che converte un segnale o una grandezza fisica (
 Come si fa a creare trsduttori? Di solito sfrutti delle proprieta' di qualche materiale.
 Nel caso di un termometro si possono usare termoresistori che cambiano la propria resistività (e quindi anche resistenza -> voltaggio) a seconda della temperatura).
 
+### Misurazione
+
+Misurare significa _comparare_ con una unità di misura.
+Unità del SI. Tutte le altre sono derivate...
+
+1 kilobyte (10^3) vs 1 kibibyte (2^10=1024)
+
+Abbiamo sensori abbastanza cheap e quindi i valori non saranno mai precisi, ci sono errori.
+Quando ricaviamo un valore dobbiamo tenere conto anche di questo.
+* Errori sistematici: si ripetono sempre allo stesso modo, sono prevedibili.
+    Ad esempio potremmo sapere che il nostro sensore di temperatura segna sempre 1° in più.
+    Possiamo risolverli con la _calibrazione_
+* Errori random: non si ripetono allo stesso modo nel tempo. Potrebbero dipendere dal fatto che l'ambiente è in costante cambiamento.
+
+Come si valutano le prestazioni di un sensore?
+Caratteristiche statiche e dinamiche ?
+* Statiche: l'input cambia lentamente (l'ambiente resta pressoché statico), l'output ha queste qualità:
+    * Accuracy: Più alta è più piccolo è l'errore che fa il sensore, è la distanza tra il misurato e il valore vero.
+    * Precision: C'è un po' di "traballamento" (non so come cazzo dirlo), facciamo prima con l'immagine valà
+        ![](./accuracyprecision.png)
+        Fai tante volte la stessa misurazione e otterrai tanti valori leggermente diversi (dipendono dalla precisione).
+        Fai la media M e trovi la differenza tra il valore più piccolo misurato (min - M) e poi trovi anche la differenza con il più grande misurato (max-M)
+        La precisione è la media tra questi 2 valori così ottenuti (in valore assoluto): precisione = (|min-M|+|max-M|)/2
+        O almeno questo è un modo per calcolare la precisione.
+    * Linearity
+    * Sensitivity
+    * ...
+* Proprietà Dinamiche:
+    * Response time: quanto ci mette il sensore a rilevare?
+        Di solito ci basta vedere quanto ci mette il sensore ad arrivare al 90% del livello del segnale finale (che raggiungerebbe dopo tempo infinito teorico).
+        È una proprietà piuttosto importante in quanto a volte ci servono strumenti che ci danno valori velocemente anche a scapito dell'accuracy.
+
+> [!NOTE]
+> Di solito l'output di un sensore non è lineare alla crescita della grandezza fisica.
+> Non è che se la temperatura aumenta di 2° allora aumenta di 3V l'output sempre.
+> Magari finche la temperatura si trova tra 20° e 30° ha un comportamento piuttosto lineare ma poi in altri range potrebbe cambiare.
+> Potrebbe anche essere che a 0° non hai 0V ma potrebbe esserci uno skew... (è un esempio che non ha molto senso ma forse da l'idea)
+
+### scarrellata di sensori
+
+* Prossimità
+    Useremo il sensore di prossimità che manda un segnale sonoro e vede quanto tempo ci mette a tornare il suono riflesso.
+    > [!WARNING]
+    > La velocità del suono dipende dalla temperatura, per questo motivo lo useremo in congiunta con il termometro.
+* Movement Detection
+    PIR
+* Angular position transducers
+* Acceleration sensors
+    MPU-6050
+* Contact
+* Optical (Fotoresistori)
+* Electricity & Magnetism
+* Vital parameters
+* Pressure
+
+vedi sito adafruit per altri sensori...
+Solitamente sono tutti I2C o SPI.
+Dato un sensore di solito ti danno anche una libreria (altrimenti usi Wire.h)
+
+> [!NOTE]
+> RFID e NFC (è come RFID ma a brevi distanze) funzionano senza batteria perchè sfruttano l'energia delle onde radio che provengono dai dispositivi che le leggono
+> Queste onde radio possono leggere e scrivere dati su un microchip applicato ad oggetti
+
+### Vedremo anche attuatori
+
+In particolare il servo motor.
+È un motore a corrente alternata, richiede meno energia rispetto a uno a corrente continua (di solito questi ultimi si usano per fare giare delle ruote (?))
 
